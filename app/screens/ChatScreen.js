@@ -1,12 +1,20 @@
 import React from 'react';
 import { View, Text, SafeAreaView, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyAppText from '../view/MyAppText';
+import LayoutView from '../view/LayoutView';
 
 
-function ChatScreen(props) {
+function ChatScreen({ navigation, route }) {
+
+    const { item } = route.params
+
     return (
         <SafeAreaView>
-            <Text style={{color: 'white'}}>123</Text>
+            <LayoutView spacing={30} margin={25}>
+                <MyAppText style={{color: 'white'}}>{ item.name }</MyAppText>
+                <MyAppText style={{color: 'white'}}></MyAppText>
+            </LayoutView>
         </SafeAreaView>
     );
 }

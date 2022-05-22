@@ -15,7 +15,6 @@ function HomeScreen({ navigation }) {
     React.useEffect(() => {
         (async () => {
             try {
-                // await AsyncStorage.getItem('@friends') ?? 
                 await AsyncStorage.setItem('@friends', JSON.stringify(textData))
                 setFriends(JSON.parse(await AsyncStorage.getItem('@friends')))
             } catch(err) {
@@ -25,7 +24,7 @@ function HomeScreen({ navigation }) {
     }, [])
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{flex: 1}}>
             <FlatList
                 data={friends}
                 renderItem={({ item }) => <ChatListItemView item={item} navigation={navigation}/>}
