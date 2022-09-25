@@ -58,12 +58,12 @@ function TextInputView({ text, setText }) {
             placeholder={'Enter a message'}
             placeholderTextColor="gray"
             style={{
-                flex: 1,
-                height: 40,
-                paddingLeft: radius,
-                color: 'white',
-                backgroundColor: colors.secondary,
-                borderRadius: radius
+                flex            : 1,
+                height          : 40,
+                paddingLeft     : radius,
+                color           : 'white',
+                backgroundColor : colors.secondary,
+                borderRadius    : radius
             }}
             // onFocus={() => setFocus(true)}
             // onBlur={() => setFocus(false)}
@@ -74,10 +74,9 @@ function TextInputView({ text, setText }) {
 function SendButtonView({ onSend }) {
     return (
         <Button
-            onPress={onSend}
-            title="Send"
-            accessibilityLabel="send message"
-            color="orange"
+            onPress = {onSend}
+            title   = "Send"
+            color   = "orange"
         />
     )
 }

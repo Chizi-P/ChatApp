@@ -28,9 +28,9 @@ function HomeScreen({ navigation }) {
         <SafeAreaView style={{flex: 1}}>
             {/* <MyAppText style={{fontSize: 20, fontWeight: 'bold'}}>設定</MyAppText> */}
             <FlatList
-                data={friends}
-                renderItem={({ item }) => <ChatListItemView friend={item} navigation={navigation}/>}
-                keyExtractor={(item, i) => i}
+                data         = {friends}
+                renderItem   = {({ item }) => <ChatListItemView friend={item} navigation={navigation}/>}
+                keyExtractor = {(item, i) => i}
             />
         </SafeAreaView>
     );

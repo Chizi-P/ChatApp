@@ -10,14 +10,14 @@ function ChatRecordView({record, style}) {
     return (
         <View style={{...style}}>
             <FlatList
-                ref={flatListRef}
-                data={record}
-                renderItem={({ item }) => <ARecordView record={ item }/> }
-                keyExtractor={(item, i) => i}
-                scrollEnabled
-                onContentSizeChange={() => {
+                ref                 = {flatListRef}
+                data                = {record}
+                renderItem          = {({ item }) => <ARecordView record={ item }/> }
+                keyExtractor        = {(item, i) => i}
+                onContentSizeChange = {() => {
                     flatListRef.current.scrollToEnd()
                 }}
+                scrollEnabled
             />
         </View>
     )

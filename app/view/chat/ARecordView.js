@@ -7,8 +7,8 @@ function ARecordView({record}) {
 
     return (
         record.sender !== 'my' 
-        ? <Received record={record}/>
-        : <Sent record={record}/>
+            ? <Received record={record}/>
+            : <Sent record={record}/>
     )
 }
 
