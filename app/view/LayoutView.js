@@ -16,6 +16,7 @@ function LayoutView({
             margin: margin,
             flexDirection: vertical || !horizontal ? 'column' : 'row',
             ...style
+            
         }}>
             { React.Children.map(children, (child, i) => (
                 React.cloneElement(child, {

@@ -3,7 +3,7 @@ import { Text } from 'react-native'
 
 function MyAppText({ children, style }) {
     return (
-        <Text style={{fontFamily: 'Cascadia-Code', ...style}}>
+        <Text style={{fontFamily: 'Cascadia-Code', color: 'white', ...style}}>
             { children }
         </Text>
     );

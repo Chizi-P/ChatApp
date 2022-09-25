@@ -1,11 +1,13 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import MyAppText from './MyAppText'
+import BoxView from './BoxView';
+import LayoutView from './LayoutView';
 
-function ChatListItemView({ item, navigation }) {
+function ChatListItemView({ friend, navigation }) {
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('Chat', {item})}>
+        <TouchableOpacity onPress={() => navigation.navigate('Chat', {friend})}>
             <View
                 style={{
                     padding: 20,
@@ -22,7 +24,7 @@ function ChatListItemView({ item, navigation }) {
                         color: 'white'
                     }}
                 >
-                    { item.name }
+                    { friend.name }
                 </MyAppText>
             </View>
         </TouchableOpacity>

@@ -1,9 +1,7 @@
+// Reference: https://reactnative.dev/docs/colors
+
 export default {
-    primary: undefined,
-    secondary: undefined,
-    lightGray: '#F5F5F5',
-    gray: '#B6B6B6',
-    clickable: '#2A94F5',
-    warning: '#BA2323',
-    background: 'white'
+    primary: '#2C2C2C',
+    secondary: 'rgba(44, 44, 44, 0.5)',
+    loading: '#2C2C2C'
 }
