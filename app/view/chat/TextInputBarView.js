@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, TextInput, Button, Alert } from 'react-native'
+import { View, Text, TextInput, Button } from 'react-native'
 import LayoutView from '../LayoutView'
 import MyAppText from '../MyAppText'
 import colors from '../../config/colors'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-function TextInputBarView({ setRecord, ws, friendName, style }) {
+function TextInputBarView({ setRecord, ws, friendID, style }) {
     const [text, setText] = React.useState('')
     return (
         <LayoutView
@@ -19,11 +20,12 @@ function TextInputBarView({ setRecord, ws, friendName, style }) {
         >
             <TextInputView text={text} setText={setText} />
             <SendButtonView
-                onSend={() => {
+                onSend={ () => {
                     if (text === '') return
-                    ws.emit('sendMsg', { to: friendName, msg: text }, res => {
-                        if      (res === 'sent') Alert({ title: '發送成功！'})
-                        else if (res === 'error') Alert({ title: '錯誤' })
+                    ws.emit('sendMsg', { to: friendID, msg: text }, res => {
+                        console.log(res)
+                        if      (res === 'sent') console.log('發送成功！')
+                        else if (res === 'error') console.log('錯誤')
                     })
                     
                     let isOk = true

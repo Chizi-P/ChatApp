@@ -5,8 +5,8 @@ import ChatListItemView from '../view/ChatListItemView';
 import MyAppText from '../view/MyAppText';
 
 const textData = [
-    {name: 'Amy'},
-    {name: 'Tom'}
+    {name: 'Amy', id: 'Amy'},
+    {name: 'Tom', id: 'Tom'}
 ]
 
 function HomeScreen({ navigation }) {

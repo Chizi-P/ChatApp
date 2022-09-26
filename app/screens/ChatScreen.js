@@ -28,9 +28,9 @@ function ChatScreen({ navigation, route }) {
     ]
 
     React.useEffect(() => {
-        ;(async () => {
-            const chatRecord = await AsyncStorage.getItem('@chatRecord')
-            if (chatRecord === null) await AsyncStorage.setItem('@chatRecord', JSON.stringify(record))
+        (async () => {
+            const chatRecord = await AsyncStorage.getItem(`@chatRecord.${friend.id}`)
+            if (chatRecord === null) await AsyncStorage.setItem(`@chatRecord.${friend.id}`, JSON.stringify(record))
             else                     setRecord(JSON.parse(chatRecord))
         })()
     }, [])

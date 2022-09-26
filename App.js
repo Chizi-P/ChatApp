@@ -1,7 +1,7 @@
 import React from 'react';
 import 'react-native-gesture-handler'
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Alert } from 'react-native';
+import { Text, View } from 'react-native';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts } from 'expo-font'
@@ -17,9 +17,16 @@ export default function App() {
     // socket 連線
     const [ws, setWs] = React.useState(null)
     React.useEffect(() => {
-        ws
-            ? initConnectSocket()
-            : setWs(io('http://172.26.1.66:3000/', { query: { token: 'token' } }))
+        (() => {
+            // const token = await AsyncStorage.getItem('@token')
+            // if (token === null) {
+            //     console.log('未登錄')
+            // }
+            const token = 'token'
+            ws
+                ? initConnectSocket()
+                : setWs(io('http://172.26.1.66:3000/chat', { query: { token: token } }))
+        })()
         return () => ws && ws.close()
     }, [ws])
 
@@ -27,12 +34,12 @@ export default function App() {
         ws.on('connect', () => {
             console.log('client connect success')
             ws.on('msg', async (data, callback) => {
-                console.log('msg:', msg)
-                if (msg && msg.hasOrder) {
-                    Alert({ title: '有新消息！', onOk: getClientRequest })
+                console.log('msg:', data)
+                if (data.msg) {
+                    // Alert({ title: '有新消息！', onOk: getClientRequest })
                     const oldItem = JSON.parse(await AsyncStorage.getItem(`@chatRecord.${data.id}`))
                     const newItem = oldItem.concat(data)
-                    await AsyncStorage.setItem(`@chatRecord.${data.id}`, newItem)
+                    await AsyncStorage.setItem(`@chatRecord.${data.id}`, JSON.stringify(newItem))
                     callback('received')
                 } else {
                     callback('error')
