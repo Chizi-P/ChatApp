@@ -5,58 +5,43 @@ import { Text, View } from 'react-native';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { useFonts } from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen';
 import HomeScreen from './app/screens/HomeScreen';
 import ChatScreen from './app/screens/ChatScreen';
 import io from 'socket.io-client'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+// import BackgroundTasks, { checkBackgroundAuthStatus } from './app/func/BackgroundTasks';
+import InitConnectSocket from './app/func/InitConnectSocket';
 
 const Stack = createStackNavigator()
 
 export default function App() {
+    
+
+
+
+
+    /* 後台任務 */
+    // const [backgroundTasksAuthorized, setBackgroundTasksAuthorized] = React.useState(true)
+    // React.useEffect(() => {
+    //     setBackgroundTasksAuthorized(checkBackgroundAuthStatus())
+    //     BackgroundTasks()
+    // }, [])
 
     // socket 連線
     const [ws, setWs] = React.useState(null)
     React.useEffect(() => {
-        (() => {
-            // const token = await AsyncStorage.getItem('@token')
-            // if (token === null) {
-            //     console.log('未登錄')
-            // }
-            const token = 'token'
-            ws
-                ? initConnectSocket()
-                : setWs(io('http://172.26.1.66:3000/chat', { query: { token: token } }))
-        })()
+        (async () => setWs(await InitConnectSocket()))()
         return () => ws && ws.close()
-    }, [ws])
-
-    const initConnectSocket = () => {
-        ws.on('connect', () => {
-            console.log('client connect success')
-            ws.on('msg', async (data, callback) => {
-                console.log('msg:', data)
-                if (data.msg) {
-                    // Alert({ title: '有新消息！', onOk: getClientRequest })
-                    const oldItem = JSON.parse(await AsyncStorage.getItem(`@chatRecord.${data.id}`))
-                    const newItem = oldItem.concat(data)
-                    await AsyncStorage.setItem(`@chatRecord.${data.id}`, JSON.stringify(newItem))
-                    callback('received')
-                } else {
-                    callback('error')
-                }
-            })
-        })
-        ws.on('error', error => {
-            console.log(error)
-        })
-    }
+    }, [])
 
     // 加載字體
-    const [loaded] = useFonts({
+    const [fontsLoaded, fontsError] = useFonts({
         'Cascadia-Code': require('./app/assets/fonts/CascadiaCode-2111.01/ttf/CascadiaCode.ttf')
     })
 
-    if (!loaded) return null
+    if (!fontsLoaded) return null
+    
 
     return (
         <NavigationContainer

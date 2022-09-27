@@ -35,8 +35,13 @@ Open App:
     Note over CS1, SS: Server Socket listener
     par Server Socket listener
         SS -->> CS1: on: send msg
+        CS1 ->> SS: emit: send msg
+        SS ->> CS2: emit: msg
+        CS2 -->> SS: callback('received')
+        SS -->> CS1: callback('sent')
     and
         SS -->> CS1: on: add friend
+        CS1 ->> SS: emit: add friend
     end
     Note over CS1, SS: Client Socket listener
     par Client Socket listener

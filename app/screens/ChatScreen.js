@@ -5,7 +5,7 @@ import {
     SafeAreaView,
     FlatList,
     KeyboardAvoidingView,
-    Image,
+    Image
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MyAppText from '../view/MyAppText'
