@@ -25,7 +25,12 @@
     "socket.io-client": "^4.5.2",
     "webpack-dev-server": "~3.11.0",
     "expo-blur": "~11.1.0",
-    "expo-splash-screen": "~0.15.1"
+    "expo-splash-screen": "~0.15.1",
+    "expo-file-system": "~14.0.0",
+    "expo-asset": "~8.5.0",
+    "expo-sqlite": "~10.2.0",
+    "expo-notifications": "~0.15.4",
+    "expo-device": "~4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

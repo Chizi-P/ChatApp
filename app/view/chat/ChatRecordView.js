@@ -3,7 +3,7 @@ import { View, Text, FlatList, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ARecordView from './ARecordView'
 
-function ChatRecordView({record, style}) {
+function ChatRecordView({chatRecord, style}) {
 
     const flatListRef = React.useRef(null)
 
@@ -11,7 +11,7 @@ function ChatRecordView({record, style}) {
         <View style={{...style}}>
             <FlatList
                 ref                 = {flatListRef}
-                data                = {record}
+                data                = {chatRecord}
                 renderItem          = {({ item }) => <ARecordView record={ item }/> }
                 keyExtractor        = {(item, i) => i}
                 onContentSizeChange = {() => {

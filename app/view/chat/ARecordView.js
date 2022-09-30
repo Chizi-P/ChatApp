@@ -2,11 +2,12 @@ import React from 'react'
 import MyAppText from '../MyAppText';
 import { View, Text } from 'react-native'
 import LayoutView from '../LayoutView';
+import { chatConfig } from '../../config/chatConfig'
 
 function ARecordView({record}) {
 
     return (
-        record.sender !== 'my' 
+        record.sender !== chatConfig.userId
             ? <Received record={record}/>
             : <Sent record={record}/>
     )

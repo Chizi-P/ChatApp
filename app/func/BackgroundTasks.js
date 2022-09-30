@@ -1,5 +1,6 @@
 import BackgroundFetch from 'react-native-background-fetch'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import UpdateChatRecords from './UpdateChatRecords';
 
 export default BackgroundTasks = () => {
     BackgroundFetch.configure({
@@ -20,10 +21,9 @@ export default BackgroundTasks = () => {
 const defaultTasks = async () => {
     // 查看有沒有新消息
     
-    const data = []
-    const chatRecords = await AsyncStorage.multiGet(data.map(e => '@chatRecord.' + e.id))
-    const newChatRecords = chatRecords.map(e => [e[0], JSON.parse(e[1])])
-    await AsyncStorage.multiSet(newChatRecords)
+    const data = {}
+    await UpdateChatRecords(data)
+    // TODO:
 }
 
 const otherTasks = async () =>  {

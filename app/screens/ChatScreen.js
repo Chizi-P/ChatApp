@@ -13,27 +13,29 @@ import LayoutView from '../view/LayoutView'
 import ChatRecordView from '../view/chat/ChatRecordView'
 import TextInputBarView from '../view/chat/TextInputBarView'
 import colors from '../config/colors'
+import { useAppContext } from '../../AppContext'
+import { chatConfig } from '../config/chatConfig'
 
 function ChatScreen({ navigation, route }) {
-    const { friend, ws } = route.params
-
-    const [record, setRecord] = React.useState([])
-
-    const Record = [
-        {
-            sender: 'sender',
-            date: '2022.01.01.10.30',
-            content: 'hi!',
-        },
-    ]
-
+    const { friend } = route.params
+    const { chatRecords, setChatRecords } = useAppContext()
+    
+    const [chatRecord, setChatRecord] = React.useState([])
     React.useEffect(() => {
-        (async () => {
-            const chatRecord = await AsyncStorage.getItem(`@chatRecord.${friend.id}`)
-            if (chatRecord === null) await AsyncStorage.setItem(`@chatRecord.${friend.id}`, JSON.stringify(record))
-            else                     setRecord(JSON.parse(chatRecord))
-        })()
-    }, [])
+        console.log('chatRecords:', chatRecords)
+        let record = (
+            chatRecords.received[friend.id]?.map(e => {
+                return {...e, sender: friend.id}
+            }) ?? []
+        ).concat((
+            chatRecords.sent[friend.id]?.map(e => {
+                return {...e, sender: chatConfig.userId}
+            })) ?? []
+        )
+        record.sort((a, b) => a.date - b.date)
+        console.log('record:', record)
+        setChatRecord(record)
+    }, [chatRecords])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -58,10 +60,10 @@ function ChatScreen({ navigation, route }) {
                 style={{ flex: 1, justifyContent: 'flex-end' }}
             >
                 <ChatRecordView
-                    record={record}
+                    chatRecord={chatRecord}
                     style={{ marginHorizontal: 25, flex: 1 }}
                 />
-                <TextInputBarView setRecord={setRecord} ws={ws} friendName={friend.name}/>
+                <TextInputBarView setChatRecords={setChatRecords} friendID={friend.id}/>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )

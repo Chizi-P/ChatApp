@@ -1,37 +1,26 @@
 import React from 'react';
-import { View, Text, SafeAreaView, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChatListItemView from '../view/ChatListItemView';
 import MyAppText from '../view/MyAppText';
+import { schedulePushNotification } from '../func/InitNotifications';
 
-const textData = [
-    {name: 'Amy', id: 'Amy'},
-    {name: 'Tom', id: 'Tom'}
-]
-
-function HomeScreen({ navigation }) {
-
-    const [friends, setFriends] = React.useState([])
-
-    React.useEffect(() => {
-        (async () => {
-            try {
-                await AsyncStorage.setItem('@friends', JSON.stringify(textData))
-                setFriends(JSON.parse(await AsyncStorage.getItem('@friends')))
-            } catch(err) {
-                console.error(err)
-            }
-        })()
-    }, [])
+function HomeScreen({ navigation, route }) {
+    
+    // FIXME: schedulePushNotification
+    const { friends } = route.params
 
     return (
         <SafeAreaView style={{flex: 1}}>
             {/* <MyAppText style={{fontSize: 20, fontWeight: 'bold'}}>設定</MyAppText> */}
             <FlatList
                 data         = {friends}
-                renderItem   = {({ item }) => <ChatListItemView friend={item} navigation={navigation}/>}
+                renderItem   = {({ item: friend }) => <ChatListItemView friend={friend} navigation={navigation}/>}
                 keyExtractor = {(item, i) => i}
             />
+            <Button title='test' onPress={async () => {
+                await schedulePushNotification()
+            }}/>
         </SafeAreaView>
     );
 }

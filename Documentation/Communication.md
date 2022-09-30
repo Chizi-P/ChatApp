@@ -2,10 +2,10 @@ Connect:
 
 ::: mermaid
 sequenceDiagram
-    participant DB as DB
-    participant SK as Socket.io
-    participant C  as Client
     participant CC as ConnectedClient
+    participant C  as Client
+    participant SK as Socket.io
+    participant DB as DB
     par Client to Socket.io
         C -->> SK: try to connect
         C ->>  SK: token
@@ -22,7 +22,9 @@ sequenceDiagram
         SK -->> C : failed to connect
     end
 :::
+
 ---
+
 Open App:
 ::: mermaid
     sequenceDiagram
@@ -72,4 +74,60 @@ sequenceDiagram
     B -->>- S: callback('received')
     S -->>- A: callback('sent')
 :::
+
 ---
+
+
+```
+{
+    sender: <id>,
+    date: <date>,
+    content: <string>
+}
+```
+
+```
+chatRecords = {
+    room.id: [
+        {
+            sender: user.id,
+            content: '',
+            date: ''
+        },
+        {
+            sender: otherUser.id,
+            content: '',
+            date: ''
+        }
+    ]
+}
+
+
+```
+
+```
+sent = {
+    user.id: [
+        {content, date},
+        ...
+    ],
+    ...
+}
+
+received = {
+    user.id: [
+        {content, date},
+        ...
+    ],
+    ...
+}
+
+chatRecords = {
+    sent: {
+        
+    },
+    received: {
+
+    }
+}
+```

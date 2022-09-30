@@ -4,9 +4,14 @@ import LayoutView from '../LayoutView'
 import MyAppText from '../MyAppText'
 import colors from '../../config/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { UpdateSentChatRecords } from '../../func/UpdateChatRecords'
+import { useAppContext } from '../../../AppContext'
 
-function TextInputBarView({ setRecord, ws, friendID, style }) {
+function TextInputBarView({ setChatRecords, friendID, style }) {
     const [text, setText] = React.useState('')
+
+    const ws = useAppContext().ws
+
     return (
         <LayoutView
             horizontal
@@ -14,33 +19,27 @@ function TextInputBarView({ setRecord, ws, friendID, style }) {
             style={{
                 justifyContent: 'space-between',
                 alignItems: 'center',
-
                 ...style,
             }}
         >
             <TextInputView text={text} setText={setText} />
             <SendButtonView
-                onSend={ () => {
+                onSend={() => {
                     if (text === '') return
-                    ws.emit('sendMsg', { to: friendID, msg: text }, res => {
-                        console.log(res)
-                        if      (res === 'sent') console.log('發送成功！')
-                        else if (res === 'error') console.log('錯誤')
-                    })
-                    
-                    let isOk = true
-                    if (isOk) {
-                        setRecord(old => {
-                            return old.concat({
-                                sender: 'my',
-                                date: new Date().toDateString(),
+                    ws.emit('sendMsg', { to: friendID, content: text}, async res => {
+                        if (res.state === 'sent')  {
+                            console.log('發送成功！')
+                            const data = {
                                 content: text,
-                            })
-                        })
-                        setText('')
-                    } else {
-                        console.log('發送失敗！')
-                    }
+                                date: res.date
+                            }
+                            const newChatRecords = await UpdateSentChatRecords(friendID, data)
+                            setChatRecords(newChatRecords)
+                            setText('')
+                        }
+                        else if (res.state === 'error') console.log('發送失敗！')
+                    })
+
                 }}
             />
         </LayoutView>
@@ -81,6 +80,10 @@ function SendButtonView({ onSend }) {
             color   = "orange"
         />
     )
+}
+
+const sendMsg = (ws, to, msg) => {
+
 }
 
 export default TextInputBarView
