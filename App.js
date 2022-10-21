@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import BackgroundTasks, { checkBackgroundAuthStatus } from './app/func/BackgroundTasks';
 import { isFirstLaunch } from './app/func/firstLaunch';
 import InitNotifications from './app/func/InitNotifications';
+import TestScreen from './app/screens/TestScreen';
 
 const Stack = createStackNavigator()
 
@@ -41,32 +42,11 @@ export default function App() {
         }
     }, [firstLaunch])
 
-    // 加載好友
-    const PresetFriends = [{name: 'Tom', id: 'Tom'}, {name: 'Amy', id: 'Amy'}]
-    const [friends, setFriends] = React.useState([])
-    React.useEffect(() => {
-        (async () => {
-            const storagedFriends = await AsyncStorage.getItem('@friends')
-            if (storagedFriends === null) {
-                await AsyncStorage.setItem('@friends', JSON.stringify(PresetFriends))
-            } else {
-                setFriends(JSON.parse(storagedFriends))
-            }
-        })()
-    }, [])
-
     /* 後台任務 */
     // const [backgroundTasksAuthorized, setBackgroundTasksAuthorized] = React.useState(true)
     // React.useEffect(() => {
     //     setBackgroundTasksAuthorized(checkBackgroundAuthStatus())
     //     BackgroundTasks()
-    // }, [])
-
-    // socket 連線
-    // const [ws, setWs] = React.useState(null)
-    // React.useEffect(() => {
-    //     (async () => setWs(await InitConnectSocket(chatRecords, setChatRecords)))()
-    //     return () => ws && ws.close()
     // }, [])
 
     // 加載字體
@@ -93,9 +73,10 @@ export default function App() {
                         headerShown: false,
                     }}
                 >
-                    {/* FIXME: schedulePushNotification */}
-                    <Stack.Screen name="Home" component={ HomeScreen } initialParams={{friends: friends}}/>
+                    {/* <Stack.Screen name="Test" component={ TestScreen } /> */}
+                    <Stack.Screen name="Home" component={ HomeScreen } />
                     <Stack.Screen name="Chat" component={ ChatScreen } />
+                    
                     
                 </Stack.Navigator>
             </NavigationContainer>

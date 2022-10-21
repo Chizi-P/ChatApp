@@ -1,6 +1,7 @@
 import io from 'socket.io-client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateReceivedChatRecords } from './UpdateChatRecords'
+import { schedulePushNotification } from './InitNotifications'
 
 export default InitConnectSocket = async (chatRecords, setChatRecords) => {
 
@@ -25,6 +26,15 @@ export default InitConnectSocket = async (chatRecords, setChatRecords) => {
             const newChatRecords = await UpdateReceivedChatRecords(sender, data)
             callback({ state: 'received' })
             setChatRecords(newChatRecords)
+            await schedulePushNotification(sender, data.content)
+        })
+        ws.once('token', async (token, callback) => {
+            console.log('got token:', token)
+            await AsyncStorage.setItem('@token', token)
+            callback({ state: 'ok'})
+        })
+        ws.emit('getFriendsData', ['Tom', 'Amy'], res => {
+            console.log(res)
         })
     })
     ws.on('error', error => {

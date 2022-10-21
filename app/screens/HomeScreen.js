@@ -3,24 +3,19 @@ import { View, Text, SafeAreaView, FlatList, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChatListItemView from '../view/ChatListItemView';
 import MyAppText from '../view/MyAppText';
-import { schedulePushNotification } from '../func/InitNotifications';
+import { useAppContext } from '../../AppContext';
 
 function HomeScreen({ navigation, route }) {
-    
-    // FIXME: schedulePushNotification
-    const { friends } = route.params
 
     return (
         <SafeAreaView style={{flex: 1}}>
             {/* <MyAppText style={{fontSize: 20, fontWeight: 'bold'}}>設定</MyAppText> */}
             <FlatList
-                data         = {friends}
+                data         = {useAppContext().friends}
                 renderItem   = {({ item: friend }) => <ChatListItemView friend={friend} navigation={navigation}/>}
                 keyExtractor = {(item, i) => i}
+                style = {{margin: 20}}
             />
-            <Button title='test' onPress={async () => {
-                await schedulePushNotification()
-            }}/>
         </SafeAreaView>
     );
 }

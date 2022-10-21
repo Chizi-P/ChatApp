@@ -9,15 +9,15 @@ Notifications.setNotificationHandler({
     }),
 });
 
-
-export async function schedulePushNotification() {
+export async function schedulePushNotification(title, body) {
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "You've got mail! 📬",
-            body: 'Here is the notification body',
+            title,
+            // subtitle: 'subtitle',
+            body, 
             data: { data: 'goes here' },
         },
-        trigger: { seconds: 2 },
+        trigger: null,
     });
 }
 

@@ -26,7 +26,7 @@ function TextInputBarView({ setChatRecords, friendID, style }) {
             <SendButtonView
                 onSend={() => {
                     if (text === '') return
-                    ws.emit('sendMsg', { to: friendID, content: text}, async res => {
+                    ws.emit('msg', { to: friendID, content: text}, async res => {
                         if (res.state === 'sent')  {
                             console.log('發送成功！')
                             const data = {
