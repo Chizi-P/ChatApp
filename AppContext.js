@@ -24,7 +24,11 @@ export const AppProvider = ({children}) => {
     const [currentChannel, setCurrentChannel] = React.useState('')
 
     // 加載好友
-    const PresetFriends = [{name: 'Tom', id: 'Tom', type: 'chat'}, {name: 'Amy', id: 'Amy', type: 'chat'}, {name: '+', id: '+', type: '+'}]
+    const PresetFriends = [
+        {name: 'Tom', id: 'Tom', type: 'chat'}, 
+        {name: 'Amy', id: 'Amy', type: 'chat'}, 
+        {name: 'plugin', id: 'plugin', type: 'plugin'}
+    ]
     const [friends, setFriends] = React.useState([])
     React.useEffect(() => {
         (async () => {

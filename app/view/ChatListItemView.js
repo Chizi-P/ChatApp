@@ -9,13 +9,25 @@ function ChatListItemView({ friend, navigation }) {
 
     return (
         <TouchableOpacity onPress={() => {
-            if (friend.type === 'chat') {
-                return navigation.navigate('Chat', {friend})
+            switch (friend.type) {
+                case 'chat':
+                    navigation.navigate('Chat', {friend})
+                    break
+                case 'plugin':
+                    navigation.navigate('Plugin', {})
+                    break
+                default:
+                    break
             }
-            if (friend.type === '+') {
-                console.log('打開內嵌應用')
-                // return navigation.navigate('app', {})
-            }
+            // if (friend.type === 'chat') {
+            //     console.log('c')
+            //     return navigation.navigate('Chat', {friend})
+            // }
+            // if (friend.type === 'plugin') {
+            //     console.log('p')
+            //     console.log('打開內嵌應用')
+            //     return navigation.navigate('Plugin')
+            // }
         }} 
             style={{
                 marginBottom: 20
