@@ -15,6 +15,8 @@ import { isFirstLaunch } from './app/func/firstLaunch';
 import InitNotifications from './app/func/InitNotifications';
 import TestScreen from './app/screens/TestScreen';
 import PluginScreen from './app/screens/PluginScreen';
+import PluginAppScreen from './app/screens/PluginAppScreen';
+import SettingScreen from './app/screens/SettingScreen';
 
 const Stack = createStackNavigator()
 
@@ -74,11 +76,12 @@ export default function App() {
                         headerShown: false,
                     }}
                 >
-                    <Stack.Screen name="Test" component={ TestScreen } />
+                    {/* <Stack.Screen name="Test" component={ TestScreen } /> */}
                     <Stack.Screen name="Home" component={ HomeScreen } />
                     <Stack.Screen name="Chat" component={ ChatScreen } />
+                    <Stack.Screen name="Setting" component={ SettingScreen }/>
                     <Stack.Screen name="Plugin" component={ PluginScreen } />
-                    
+                    <Stack.Screen name="PluginApp" component={ PluginAppScreen } />
                     
                 </Stack.Navigator>
             </NavigationContainer>

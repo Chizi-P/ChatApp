@@ -25,11 +25,11 @@ export const AppProvider = ({children}) => {
 
     // 加載好友
     const PresetFriends = [
-        {name: 'Tom', id: 'Tom', type: 'chat'}, 
-        {name: 'Amy', id: 'Amy', type: 'chat'}, 
-        {name: 'plugin', id: 'plugin', type: 'plugin'}
+        {name: 'Tom', id: 'Tom', type: 'Chat'}, 
+        {name: 'Amy', id: 'Amy', type: 'Chat'}, 
+        {name: 'plugin', id: 'plugin', type: 'Plugin'}
     ]
-    const [friends, setFriends] = React.useState([])
+    const [friends, setFriends] = React.useState(PresetFriends)
     React.useEffect(() => {
         (async () => {
             const storagedFriends = await AsyncStorage.getItem('@friends')

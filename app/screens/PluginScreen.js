@@ -1,64 +1,56 @@
 import React from 'react'
-import { SafeAreaView, View, Text, TouchableOpacity, Button } from 'react-native'
+import { SafeAreaView, View, Text, TouchableWithoutFeedback, Button } from 'react-native'
 import MyAppText from '../view/MyAppText'
-import { Accelerometer } from 'expo-sensors';
+import ListView from '../view/ListView';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ItemView from '../view/ItemView';
 
-function PluginScreen() {
+function PluginScreen({ navigation }) {
 
-    const [data, setData] = React.useState({
-        x: 0,
-        y: 0,
-        z: 0,
-    })
-
-    const [subscription, setSubscription] = React.useState(null);
-
-    const _slow = () => {
-        Accelerometer.setUpdateInterval(1000);
-    };
-
-    const _fast = () => {
-        Accelerometer.setUpdateInterval(16);
-    };
-
-    const _subscribe = () => {
-        setSubscription(
-            Accelerometer.addListener(result => {
-                setData(result);
-            })
-        );
-    };
-
-    const _unsubscribe = () => {
-        subscription && subscription.remove();
-        setSubscription(null);
-    };
-
+    const key = '@installed.plugins.list'
+    const PresetPlugins = [{name: 'Accelerometer', version: 1}, {name: 'ControlMouse', version: 1}]
+    const [installedPluginsList, setInstalledPluginsList] = React.useState(PresetPlugins)
     React.useEffect(() => {
-        _subscribe();
-        return () => _unsubscribe();
-    }, []);
+        (async () => {
+            const storagedInstalledPluginsList = await AsyncStorage.getItem(key)
+            if (!storagedInstalledPluginsList) {
+                await AsyncStorage.setItem(key, JSON.stringify(PresetPlugins))
+            } else {
+                setInstalledPluginsList(JSON.parse(storagedInstalledPluginsList))
+            }
+        })()
+    }, [])
 
-    const { x, y, z } = data;
 
     return (
         <SafeAreaView>
-            <MyAppText>Accelerometer :</MyAppText>
-            <MyAppText>
-                x: {round(x)} y: {round(y)} z: {round(z)}
-            </MyAppText>
-            <View>
-                <Button onPress={subscription ? _unsubscribe : _subscribe} title={subscription ? 'On' : 'Off'} />
-                <Button onPress={_slow} title='Slow' />
-                <Button onPress={_fast} title='Fast' />
-            </View>
+            <ListView title='Installed'>
+                {installedPluginsList.map((plugin, i) => (
+                    <ItemView 
+                        key={i} 
+                        onPress={() => navigation.navigate('PluginApp', { plugin })}
+                    >
+                        {plugin.name} (version: {plugin.version})
+                    </ItemView>
+                ))}
+            </ListView>
+            <ListView title='Packages'>
+                {Packages.map(e => (
+                    <ItemView>{e.name} (version: {e.version})</ItemView>
+                ))}
+            </ListView>
         </SafeAreaView>
-    );
+    )
 }
 
-function round(x) {
-    return x.toFixed(4)
-    return x
-}
+const Packages = [
+    {name: '藍牙通訊', version: 0}, 
+    {name: 'AI', version: 0}, 
+    {name: '遠程控制', version: 0}, 
+    {name: '代理訪問內網', version: 0}, 
+    {name: 'SSH', version: 0}, 
+    {name: '觸控滑鼠', version: 0}
+]
+
 
 export default PluginScreen;

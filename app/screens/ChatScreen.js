@@ -15,6 +15,9 @@ import TextInputBarView from '../view/chat/TextInputBarView'
 import colors from '../config/colors'
 import { useAppContext } from '../../AppContext'
 import { chatConfig } from '../config/chatConfig'
+import ListView from '../view/ListView'
+import ARecordView from '../view/chat/ARecordView'
+import ItemView from '../view/ItemView'
 
 function ChatScreen({ navigation, route }) {
     const { friend } = route.params
@@ -37,9 +40,23 @@ function ChatScreen({ navigation, route }) {
         setChatRecord(record)
     }, [chatRecords])
 
+    const flatListRef = React.useRef(null)
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <LayoutView
+            <ListView title={friend.name.toUpperCase()}>
+                <FlatList
+                    ref                 = {flatListRef}
+                    data                = {chatRecord}
+                    renderItem          = {({ item }) => <ItemView>{item.content}</ItemView> }
+                    keyExtractor        = {(item, i) => i}
+                    onContentSizeChange = {() => {
+                        flatListRef.current.scrollToEnd()
+                    }}
+                    scrollEnabled
+                />
+            </ListView>
+            {/* <LayoutView
                 horizontal
                 margin={25}
                 spacing={10}
@@ -54,15 +71,15 @@ function ChatScreen({ navigation, route }) {
                     }}
                 />
                 <MyAppText>{friend.name}</MyAppText>
-            </LayoutView>
+            </LayoutView> */}
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1, justifyContent: 'flex-end' }}
             >
-                <ChatRecordView
+                {/* <ChatRecordView
                     chatRecord={chatRecord}
                     style={{ marginHorizontal: 25, flex: 1 }}
-                />
+                /> */}
                 <TextInputBarView setChatRecords={setChatRecords} friendID={friend.id}/>
             </KeyboardAvoidingView>
         </SafeAreaView>
