@@ -18,6 +18,7 @@ function GridPointBackgroundView({
     pointSize = [2, 2],
     fill = false,
     style,
+    ...props
 }) {
     const dimensions = useWindowDimensions()
     width ??= dimensions.width
@@ -31,7 +32,7 @@ function GridPointBackgroundView({
     }
 
     return (
-        <LayoutView vertical spacing={spacing} margin={margin} style={{justifyContent: fill ? 'space-around' : 'flex-start', flex: 1, ...style}}>
+        <LayoutView vertical spacing={spacing} margin={margin} style={{justifyContent: fill ? 'space-around' : 'flex-start', flex: 1, ...style}} {...props}>
             {new Array(row).fill(
                 <LayoutView horizontal spacing={spacing} style={{justifyContent: fill ? 'space-around' : 'flex-start'}}>
                     {new Array(column).fill(<PointView size={pointSize} />)}

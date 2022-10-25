@@ -5,6 +5,7 @@ import MyAppText from '../view/MyAppText';
 import ItemView from '../view/ItemView';
 import AccelerometerPlugin from './plugins/AccelerometerPlugin';
 import ControlMousePlugin from './plugins/ControlMousePlugin';
+import GyroscopePlugin from './plugins/GyroscopePlugin';
 
 function PluginAppScreen({ route }) {
     const { plugin } = route.params
@@ -16,6 +17,8 @@ function PluginAppScreen({ route }) {
                 ? <AccelerometerPlugin/> 
                 : plugin.name === 'ControlMouse'
                 ? <ControlMousePlugin/>
+                : plugin.name === 'Gyroscope'
+                ? <GyroscopePlugin/>
                 : <FailedToLoad plugin/>
             }
         </SafeAreaView>

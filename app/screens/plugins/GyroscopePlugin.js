@@ -1,11 +1,11 @@
 import React from 'react';
-import { SafeAreaView, View, Text } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import ListView from '../../view/ListView';
-import { Accelerometer } from 'expo-sensors';
+import { Gyroscope } from 'expo-sensors';
 import ItemView from '../../view/ItemView';
 import { useAppContext } from '../../../AppContext';
 
-function AccelerometerPlugin() {
+function GyroscopePlugin(props) {
 
     const ws = useAppContext().ws
 
@@ -18,16 +18,16 @@ function AccelerometerPlugin() {
     const [subscription, setSubscription] = React.useState(null);
 
     const _slow = () => {
-        Accelerometer.setUpdateInterval(1000);
+        Gyroscope.setUpdateInterval(1000);
     };
 
     const _fast = () => {
-        Accelerometer.setUpdateInterval(16);
+        Gyroscope.setUpdateInterval(16);
     };
 
     const _subscribe = () => {
         setSubscription(
-            Accelerometer.addListener(result => {
+            Gyroscope.addListener(result => {
                 setData(result);
             })
         );
@@ -51,14 +51,14 @@ function AccelerometerPlugin() {
     }
 
     React.useEffect(() => {
-        ws.emit('plugin', 'Accelerometer', { x, y, z }, res => {
+        ws.emit('plugin', 'Gyroscope', { x, y, z }, res => {
             console.log(res)
         })
     }, [data])
 
     return (
         <SafeAreaView>
-            <ListView title='Accelerometer'>
+            <ListView title='Gyroscope'>
                 <ItemView>x: {round(x)}</ItemView>
                 <ItemView>y: {round(y)}</ItemView>
                 <ItemView>z: {round(z)}</ItemView>
@@ -72,4 +72,4 @@ function AccelerometerPlugin() {
     )
 }
 
-export default AccelerometerPlugin
+export default GyroscopePlugin;

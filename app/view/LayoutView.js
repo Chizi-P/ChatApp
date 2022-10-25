@@ -7,7 +7,8 @@ function LayoutView({
     spacing = 0, 
     vertical, 
     horizontal,
-    style
+    style,
+    ...props
     }) {
     const lastChildIndex = React.Children.count(children) - 1
     return (
@@ -26,7 +27,8 @@ function LayoutView({
                         ...vertical || !horizontal 
                         ? { marginBottom: i != lastChildIndex ? spacing : 0 } 
                         : { marginRight:  i != lastChildIndex ? spacing : 0 }
-                    }
+                    },
+                    ...props
                 })
             )) }
         </View>

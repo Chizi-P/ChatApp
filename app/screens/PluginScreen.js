@@ -8,7 +8,11 @@ import ItemView from '../view/ItemView';
 function PluginScreen({ navigation }) {
 
     const key = '@installed.plugins.list'
-    const PresetPlugins = [{name: 'Accelerometer', version: 1}, {name: 'ControlMouse', version: 1}]
+    const PresetPlugins = [
+        {name: 'Accelerometer', version: 1}, 
+        {name: 'ControlMouse', version: 1},
+        {name: 'Gyroscope', version: 1}
+    ]
     const [installedPluginsList, setInstalledPluginsList] = React.useState(PresetPlugins)
     React.useEffect(() => {
         (async () => {
