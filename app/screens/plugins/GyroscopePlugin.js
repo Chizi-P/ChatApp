@@ -47,7 +47,6 @@ function GyroscopePlugin(props) {
 
     function round(x) {
         return x.toFixed(4)
-        return x
     }
 
     React.useEffect(() => {
@@ -59,14 +58,14 @@ function GyroscopePlugin(props) {
     return (
         <SafeAreaView>
             <ListView title='Gyroscope'>
-                <ItemView>x: {round(x)}</ItemView>
-                <ItemView>y: {round(y)}</ItemView>
-                <ItemView>z: {round(z)}</ItemView>
+                <ItemView text={`x: ${round(x)}`}/>
+                <ItemView text={`y: ${round(y)}`}/>
+                <ItemView text={`z: ${round(z)}`}/>
             </ListView>
             <ListView title='Controller'>
-                <ItemView onPress={subscription ? _unsubscribe : _subscribe} title={subscription ? 'On' : 'Off'}>{subscription ? 'On' : 'Off'}</ItemView>
-                <ItemView onPress={_slow}>Slow</ItemView>
-                <ItemView onPress={_fast}>Fast</ItemView>
+                <ItemView text={subscription ? 'On' : 'Off'} onPress={subscription ? _unsubscribe : _subscribe} title={subscription ? 'On' : 'Off'}/>
+                <ItemView text='Slow' onPress={_slow}/>
+                <ItemView text='Fast' onPress={_fast}/>
             </ListView>
         </SafeAreaView>
     )

@@ -15,6 +15,8 @@ import { useAppContext } from '../../AppContext'
 import ListView from '../view/ListView'
 import GridPointBackgroundView from '../view/GridPointBackgroundView'
 import ItemView from '../view/ItemView'
+import ChartView from '../view/chart/ChartView'
+import { schedulePushNotification } from '../func/InitNotifications'
 
 function HomeScreen({ navigation }) {
     return (
@@ -24,12 +26,11 @@ function HomeScreen({ navigation }) {
                     data={useAppContext().friends}
                     renderItem={({ item: friend }) => (
                         <ItemView
+                            text={friend.name.toUpperCase()}
                             onPress={() =>
                                 navigation.navigate(friend.type, { friend })
                             }
-                        >
-                            {friend.name.toUpperCase()}
-                        </ItemView>
+                        />
                     )}
                     keyExtractor={(item, i) => i}
                 />

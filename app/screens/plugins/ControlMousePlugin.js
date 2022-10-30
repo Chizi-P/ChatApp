@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, SafeAreaView, Animated, useWindowDimensions, Image } from 'react-native';
+import { View, SafeAreaView, Animated, useWindowDimensions } from 'react-native';
 import ItemView from '../../view/ItemView';
 import ListView from '../../view/ListView';
 import MyAppText from '../../view/MyAppText';
@@ -14,14 +14,8 @@ function ControlMousePlugin(props) {
 
     const [touch, setTouch] = React.useState({x: 0, y: 0})
 
-    // const [image, setImage] = React.useState(null)
-
     function sendPosition({x, y}) {
-        ws.emit('plugin', 'ControlMouse', arguments[0], res => {
-            
-            // setImage(res)
-            // console.log(res)
-        })
+        ws.emit('plugin', 'ControlMouse', arguments[0])
     }
 
     const cursorSize = 30
@@ -152,9 +146,6 @@ function ControlMousePlugin(props) {
                     </LayoutView>
                 ))}
             </LayoutView>
-
-            {/* <Image source={{uri: 'data:image/jpg;base64,' + image}} style={{width: 100, height: 100, backgroundColor: 'red'}} /> */}
-
         </SafeAreaView>
     )
 }

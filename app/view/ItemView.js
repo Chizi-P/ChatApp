@@ -1,26 +1,32 @@
 import React from 'react';
-import { View, TouchableWithoutFeedback } from 'react-native'
+import { View, TouchableWithoutFeedback, Animated } from 'react-native'
 import MyAppText from './MyAppText';
+import useTypedText from '../hook/useTypedText';
 
-function ItemView({ highlight, onPress, children, style }) {
+function ItemView({ highlight, text, style, ...props }) {
 
     const [isHighlight, setHighlight] = React.useState(highlight)
 
+    const typedText = useTypedText(text, 30)
+
     return (
         <TouchableWithoutFeedback
-            onPressIn={() => setHighlight(true)}
-            onPressOut={() => setHighlight(false)}
-            onPress={onPress}
-            disabled={onPress === undefined}
+            onPressIn={() => setHighlight(!highlight)}
+            onPressOut={() => setHighlight(highlight)}
+            disabled={props.onPress === undefined}
+            style={{
+                display: text ? 'flex' : 'none',
+            }}
+            {...props}
         >
-            <View>
+            <View >
                 <MyAppText
                     style={{
                         ...textStyle(isHighlight),
                         ...style
                     }}
                 >
-                    {children}
+                    {typedText}
                 </MyAppText>
             </View>
         </TouchableWithoutFeedback>
@@ -30,7 +36,7 @@ function ItemView({ highlight, onPress, children, style }) {
 const textStyle = highlight => {
     return {
         fontSize: 18,
-        backgroundColor: highlight ? 'white' : 'black',
+        backgroundColor: highlight ? 'white' : 'transparent',
         alignSelf: 'flex-start',
         color: highlight ? 'black' : 'white',
         paddingHorizontal: 8,
@@ -43,9 +49,37 @@ const textStyle = highlight => {
 ItemView.Error = ({text}) => {
     return (
         <View style={{flexDirection: 'row'}}>
-            <ItemView style={{backgroundColor: 'red'}}>Error</ItemView>
-            <ItemView>{text}</ItemView>
+            <ItemView text='Error' style={{backgroundColor: 'red'}}/>
+            <ItemView text={text}/>
         </View>
+    )
+}
+
+ItemView.Background = ({children, ...props}) => {
+
+    const anim = React.useRef(new Animated.Value(0)).current
+
+    React.useEffect(() => {
+        Animated.timing(anim, {
+            toValue: 100,
+            duration: 1000,
+            useNativeDriver: false
+        }).start()
+    }, [])
+
+    return (
+        <Animated.View style={{
+            // flex: 1,
+            width: anim.interpolate({
+                inputRange: [0, 100],
+                outputRange: ['0%', '100%']
+            }),
+            backgroundColor: '#111111',
+            overflow: 'hidden',
+            ...props
+        }}>
+            {children}
+        </Animated.View>
     )
 }
 

@@ -9,9 +9,10 @@ function PluginScreen({ navigation }) {
 
     const key = '@installed.plugins.list'
     const PresetPlugins = [
-        {name: 'Accelerometer', version: 1}, 
-        {name: 'ControlMouse', version: 1},
-        {name: 'Gyroscope', version: 1}
+        {name: 'Attitude Heading Reference Systems', version: 1}, 
+        {name: 'Control Mouse', version: 1},
+        {name: 'Gyroscope', version: 1},
+        {name: 'Magnetometer', version: 1}
     ]
     const [installedPluginsList, setInstalledPluginsList] = React.useState(PresetPlugins)
     React.useEffect(() => {
@@ -31,16 +32,15 @@ function PluginScreen({ navigation }) {
             <ListView title='Installed'>
                 {installedPluginsList.map((plugin, i) => (
                     <ItemView 
+                        text={plugin.name}
                         key={i} 
                         onPress={() => navigation.navigate('PluginApp', { plugin })}
-                    >
-                        {plugin.name} (version: {plugin.version})
-                    </ItemView>
+                    />
                 ))}
             </ListView>
             <ListView title='Packages'>
                 {Packages.map(e => (
-                    <ItemView>{e.name} (version: {e.version})</ItemView>
+                    <ItemView text={e.name}/>
                 ))}
             </ListView>
         </SafeAreaView>

@@ -48,7 +48,7 @@ function ChatScreen({ navigation, route }) {
                 <FlatList
                     ref                 = {flatListRef}
                     data                = {chatRecord}
-                    renderItem          = {({ item }) => <ItemView>{item.content}</ItemView> }
+                    renderItem          = {({ item }) => <ItemView text={item.content} /> }
                     keyExtractor        = {(item, i) => i}
                     onContentSizeChange = {() => {
                         flatListRef.current.scrollToEnd()

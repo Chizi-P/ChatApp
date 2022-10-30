@@ -1,106 +1,72 @@
 import React from 'react'
-import { View, Animated, TouchableWithoutFeedback } from 'react-native'
+import { View, Animated, TouchableWithoutFeedback, LayoutAnimation, Button } from 'react-native'
 import MyAppText from './MyAppText'
 import LayoutView from './LayoutView'
+import ItemView from './ItemView'
+import ZStack from './ZStack'
 
 function ListView({ title, children }) {
+
+    const [expanded, setExpanded] = React.useState(true);
+
     return (
-        <LayoutView spacing={20} margin={20}>
-            <TitleView title={title} highlight />
+        <LayoutView 
+            spacing={10} 
+            margin={15}
+        >
+            <TitleView title={'░░ ' + title}  expanded={expanded} setExpanded={setExpanded} style={{display: expanded ? 'flex' : 'none'}}/>
             <View
                 style={{
                     flexDirection: 'column',
-                    flexWrap: 'wrap',
+                    // flexWrap: 'wrap',
                     borderColor: 'white',
-                    borderWidth: 1,
+                    // borderWidth: 1, // 邊線
+                    borderLeftWidth: 1,
                     borderRadius: 2,
+                    marginLeft: 18,
+                    backgroundColor: '#111111'
                 }}
             >
-                <LayoutView spacing={2} margin={20}>
-                    {children}
+                <LayoutView spacing={2} margin={expanded ? 20 : 5}>
+                    {expanded 
+                        ? children 
+                        : <TitleView title={title} highlight expanded={expanded} setExpanded={setExpanded} style={{display: expanded ? 'none': 'flex'}}/>
+                    }
                 </LayoutView>
             </View>
         </LayoutView>
     )
 }
 
-const TitleView = ({ title, highlight, style }) => {
 
+
+const TitleView = ({ title, highlight, expanded, setExpanded, ...props }) => {
     return (
-        <View style={style}>
-            <TextAnimation>
-                <MyAppText
-                    style={{
-                        ...textStyle(highlight),
-                        display: title ? 'flex' : 'none',
-                    }}
-                >
-                    {title}
-                </MyAppText>
-            </TextAnimation>
-        </View>
-    )
-}
-
-const TextAnimation = ({ children, style }) => {
-    const fadeIn = React.useRef(new Animated.Value(0)).current
-
-    React.useEffect(() => {
-        Animated.timing(fadeIn, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-        }).start()
-    }, [fadeIn])
-
-    return (
-        <Animated.View
-            style={{
-                ...style,
-                opacity: fadeIn,
+        <ItemView text={title} highlight={highlight}
+            style={ props.style }
+            onPress={() => {
+                LayoutAnimation.configureNext({
+                    duration: 700,
+                    create: {
+                        type: LayoutAnimation.Types.easeOut,
+                        property: LayoutAnimation.Properties.opacity
+                    },
+                    update: {
+                        type: LayoutAnimation.Types.spring,
+                        springDamping: 0.5,
+                    },
+                    delete: {
+                        type: LayoutAnimation.Types.linear,
+                        // springDamping: 0.5,
+                        property: LayoutAnimation.Properties.opacity,
+                        duration: 100
+                    }
+                })
+                setExpanded(!expanded)
             }}
-        >
-            {children}
-        </Animated.View>
+        />
     )
-}
 
-// ListView.Item = function ListItemView({ highlight, onPress, children, style }) {
-
-//     const [isHighlight, setHighlight] = React.useState(highlight)
-
-//     return (
-//         <TouchableWithoutFeedback
-//             onPressIn={() => setHighlight(true)}
-//             onPressOut={() => setHighlight(false)}
-//             onPress={onPress}
-//             disabled={onPress === undefined}
-//         >
-//             <View>
-//                 <MyAppText
-//                     style={{
-//                         ...textStyle(isHighlight),
-//                         ...style
-//                     }}
-//                 >
-//                     {children}
-//                 </MyAppText>
-//             </View>
-//         </TouchableWithoutFeedback>
-//     )
-// }
-
-const textStyle = highlight => {
-    return {
-        fontSize: 18,
-        backgroundColor: highlight ? 'white' : 'black',
-        alignSelf: 'flex-start',
-        color: highlight ? 'black' : 'white',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        overflow: 'hidden',
-        borderRadius: 2
-    }
 }
 
 export default ListView

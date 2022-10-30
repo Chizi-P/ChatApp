@@ -3,9 +3,10 @@ import { SafeAreaView, View, createElement, Text } from 'react-native';
 import ListView from '../view/ListView';
 import MyAppText from '../view/MyAppText';
 import ItemView from '../view/ItemView';
-import AccelerometerPlugin from './plugins/AccelerometerPlugin';
+import AttitudeHeadingReferenceSystemsPlugin from './plugins/AttitudeHeadingReferenceSystemsPlugin';
 import ControlMousePlugin from './plugins/ControlMousePlugin';
 import GyroscopePlugin from './plugins/GyroscopePlugin';
+import MagnetometerPlugin from './plugins/MagnetometerPlugin'
 
 function PluginAppScreen({ route }) {
     const { plugin } = route.params
@@ -13,12 +14,14 @@ function PluginAppScreen({ route }) {
     return (
         <SafeAreaView style={{flex: 1}}>
             {
-                plugin.name === 'Accelerometer' 
-                ? <AccelerometerPlugin/> 
-                : plugin.name === 'ControlMouse'
+                plugin.name === 'Attitude Heading Reference Systems' 
+                ? <AttitudeHeadingReferenceSystemsPlugin/> 
+                : plugin.name === 'Control Mouse'
                 ? <ControlMousePlugin/>
                 : plugin.name === 'Gyroscope'
                 ? <GyroscopePlugin/>
+                : plugin.name === 'Magnetometer'
+                ? <MagnetometerPlugin/>
                 : <FailedToLoad plugin/>
             }
         </SafeAreaView>

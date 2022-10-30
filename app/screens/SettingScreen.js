@@ -7,10 +7,6 @@ function SettingScreen() {
     return (
         <SafeAreaView>
             <ListView title='SETTING' >
-                <ItemView>Can receive messages</ItemView>
-                <ItemView>2</ItemView>
-                <ItemView>H</ItemView>
-                <ItemView>H</ItemView>
             </ListView>
         </SafeAreaView>
     )
