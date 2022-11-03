@@ -1,10 +1,14 @@
 import React from 'react';
 import { View } from 'react-native'
+import ItemView from './ItemView';
+import LayoutView from './LayoutView';
+import ListView from './ListView';
+import MyAppText from './MyAppText';
 
-function ToggleView(props) {
+function ToggleView({...props}) {
     return (
-        <View>
-            
+        <View {...props}>
+            <LayoutView horizontal><ItemView text='Connect to the server'/></LayoutView>
         </View>
     );
 }

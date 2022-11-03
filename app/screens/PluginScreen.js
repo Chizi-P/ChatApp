@@ -48,12 +48,12 @@ function PluginScreen({ navigation }) {
 }
 
 const Packages = [
-    {name: '藍牙通訊', version: 0}, 
-    {name: 'AI', version: 0}, 
-    {name: '遠程控制', version: 0}, 
-    {name: '代理訪問內網', version: 0}, 
-    {name: 'SSH', version: 0}, 
-    {name: '觸控滑鼠', version: 0}
+    {name: '空的', version: 0},
+    // {name: '藍牙通訊', version: 0}, 
+    // {name: 'AI', version: 0}, 
+    // {name: '遠程控制', version: 0}, 
+    // {name: '代理訪問內網', version: 0}, 
+    // {name: 'SSH', version: 0}, 
 ]
 
 

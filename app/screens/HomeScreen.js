@@ -35,12 +35,9 @@ function HomeScreen({ navigation }) {
                     keyExtractor={(item, i) => i}
                 />
             </ListView>
-            {/* <FlatList
-                data         = {useAppContext().friends}
-                renderItem   = {({ item: friend }) => <ChatListItemView friend={friend} navigation={navigation}/>}
-                keyExtractor = {(item, i) => i}
-                style = {{margin: 20}}
-            /> */}
+            <ListView title={'SETTING'}>
+                <ItemView text={'To Setting Screen'} onPress={() => navigation.navigate('Setting')}/>
+            </ListView>
         </SafeAreaView>
     )
 }
