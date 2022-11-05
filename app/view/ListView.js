@@ -11,11 +11,18 @@ import LayoutView from './LayoutView'
 import ItemView from './ItemView'
 import ZStack from './ZStack'
 
-function ListView({ title, children }) {
-    const [expanded, setExpanded] = React.useState(true)
+function ListView({ title, initExpand = true, expanded, setExpanded, children, onPress = () => {}, ...props }) {
+
+    if (!expanded && !setExpanded) {
+        var [expanded, setExpanded] = React.useState(initExpand)
+    }
+
+    React.useEffect(() => {
+        onPress(expanded)
+    }, [expanded])
 
     return (
-        <LayoutView spacing={10} margin={15}>
+        <LayoutView spacing={10} margin={15} {...props}>
             <TitleView
                 title={'░░ ' + title}
                 expanded={expanded}

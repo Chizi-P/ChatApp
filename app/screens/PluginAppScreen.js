@@ -7,6 +7,7 @@ import AttitudeHeadingReferenceSystemsPlugin from './plugins/AttitudeHeadingRefe
 import ControlMousePlugin from './plugins/ControlMousePlugin';
 import GyroscopePlugin from './plugins/GyroscopePlugin';
 import MagnetometerPlugin from './plugins/MagnetometerPlugin'
+import SensorsPlugin from './plugins/SensorsPlugin';
 
 function PluginAppScreen({ route }) {
     const { plugin } = route.params
@@ -16,6 +17,8 @@ function PluginAppScreen({ route }) {
             {
                 plugin.name === 'Attitude Heading Reference Systems' 
                 ? <AttitudeHeadingReferenceSystemsPlugin/> 
+                : plugin.name === 'Sensors'
+                ? <SensorsPlugin/>
                 : plugin.name === 'Control Mouse'
                 ? <ControlMousePlugin/>
                 : plugin.name === 'Gyroscope'

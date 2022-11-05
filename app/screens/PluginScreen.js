@@ -10,6 +10,7 @@ function PluginScreen({ navigation }) {
     const key = '@installed.plugins.list'
     const PresetPlugins = [
         {name: 'Attitude Heading Reference Systems', version: 1}, 
+        {name: 'Sensors', version: 1},
         {name: 'Control Mouse', version: 1},
         {name: 'Gyroscope', version: 1},
         {name: 'Magnetometer', version: 1}
