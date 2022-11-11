@@ -3,11 +3,11 @@ import { View, TouchableWithoutFeedback, Animated } from 'react-native'
 import MyAppText from './MyAppText';
 import useTypedText from '../hook/useTypedText';
 
-function ItemView({ highlight, text, style, ...props }) {
+function ItemView({ highlight, text, style, typed = true,...props }) {
 
     const [isHighlight, setHighlight] = React.useState(highlight)
 
-    const typedText = useTypedText(text, 30)
+    const typedText = typed ? useTypedText(text, 30) : text
 
     return (
         <TouchableWithoutFeedback

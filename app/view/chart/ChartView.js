@@ -14,7 +14,7 @@ function ChartView({ y, x, ...props}) {
 
     const [layoutSize, setLayoutSize] = React.useState({width: 0, height: 0})
 
-    const [yRange, setYRange] = React.useState({min: -50, max: 50})
+    const [yRange, setYRange] = React.useState({min: 0, max: 1})
     React.useEffect(() => {
         setYRange({min: Math.min(yRange.min, y.at(-1)), max: Math.max(yRange.max, y.at(-1))})
         console.log(y.at(-1) / (yRange.max - yRange.min * layoutSize.height))
@@ -31,15 +31,22 @@ function ChartView({ y, x, ...props}) {
             <Svg 
                 height='100' 
                 width='100%'
-                style={{backgroundColor: 'blue'}} 
+                style={{backgroundColor: 'red'}} 
                 onLayout={(e) => {
                     setLayoutSize({width: e.nativeEvent.layout.width, height: e.nativeEvent.layout.height})
                 }}
                 {...props}
             >
                 {/* <AnimatedRect x="15" y="15" width={anim} height="20" stroke="white" strokeWidth='0.5'/> */}
+                {/* { Object.entries(y).map(([key, val]) => {
+                    <Polyline 
+                        points={val.map((e, i) => [x?.[i] ?? i / y.length * layoutSize.width, (e - yRange.min) / (yRange.max - yRange.min) * layoutSize.height])}
+                        stroke='white'
+                        strokeWidth={1}
+                    />
+                }) } */}
                 <Polyline 
-                    points={y.map((e, i) => [x?.[i] ?? i / y.length * layoutSize.width, e / (yRange.max - yRange.min) * layoutSize.height - yRange.min])}
+                    points={y.map((e, i) => [x?.[i] ?? i / y.length * layoutSize.width, (e - yRange.min) / (yRange.max - yRange.min) * layoutSize.height])}
                     stroke='white'
                     strokeWidth={1}
                 />
@@ -64,7 +71,7 @@ export const useChartData = ({ init = [0] , tempLength = 100, followingDataState
             let newObj = old.slice(old.length > tempLength ? 1 : 0)
             // let newObj = [...old]
             // if (old.length > tempLength) newObj.shift()
-            newObj.push(data.x + 50)
+            newObj.push(data)
             return newObj
         })
     }

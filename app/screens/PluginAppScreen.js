@@ -8,6 +8,7 @@ import ControlMousePlugin from './plugins/ControlMousePlugin';
 import GyroscopePlugin from './plugins/GyroscopePlugin';
 import MagnetometerPlugin from './plugins/MagnetometerPlugin'
 import SensorsPlugin from './plugins/SensorsPlugin';
+import TamperingPlugin from './plugins/TamperingPlugin';
 
 function PluginAppScreen({ route }) {
     const { plugin } = route.params
@@ -25,6 +26,8 @@ function PluginAppScreen({ route }) {
                 ? <GyroscopePlugin/>
                 : plugin.name === 'Magnetometer'
                 ? <MagnetometerPlugin/>
+                : plugin.name === 'Tampering With Files'
+                ? <TamperingPlugin/>
                 : <FailedToLoad plugin/>
             }
         </SafeAreaView>

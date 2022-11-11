@@ -10,6 +10,7 @@ import {
 } from 'expo-sensors'
 import ItemView from '../../view/ItemView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import ChartView, { useChartData } from '../../view/chart/ChartView'
 
 function SensorsPlugin(props) {
 
@@ -111,6 +112,8 @@ function SensorsPlugin(props) {
 
     const round = x => x.toFixed(4)
 
+    const [acceChartData, acceAddChartData] = useChartData({followingDataState: acce.x * 9.81, tempLength: 50})
+
     return (
         <SafeAreaView>
             <ScrollView>
@@ -129,7 +132,9 @@ function SensorsPlugin(props) {
                             setRecodedAcce(true)
                         }
                     }}/>
+                    
                 </ListView>
+                <ChartView y={acceChartData}/>
                 <ListView title="Gyroscope" initExpand={false} onPress={toggleGyro}>
                     <ItemView text={`x: ${round(gyro.x)}`} />
                     <ItemView text={`y: ${round(gyro.y)}`} />

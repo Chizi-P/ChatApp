@@ -8,12 +8,14 @@ import ItemView from '../view/ItemView';
 function PluginScreen({ navigation }) {
 
     const key = '@installed.plugins.list'
+    // TODO: 應該要加id 顯示名稱和id不一樣
     const PresetPlugins = [
         {name: 'Attitude Heading Reference Systems', version: 1}, 
         {name: 'Sensors', version: 1},
         {name: 'Control Mouse', version: 1},
         {name: 'Gyroscope', version: 1},
-        {name: 'Magnetometer', version: 1}
+        {name: 'Magnetometer', version: 1},
+        {name: 'Tampering With Files', version: 1}
     ]
     const [installedPluginsList, setInstalledPluginsList] = React.useState(PresetPlugins)
     React.useEffect(() => {

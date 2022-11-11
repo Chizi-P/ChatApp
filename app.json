@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "ChatApp",
-    "slug": "ChatApp",
+    "name": "zT3Tz",
+    "slug": "zt3tz",
+    "owner": "zt3tz",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
@@ -18,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zt3tz.zt3tz"
     },
     "android": {
       "adaptiveIcon": {
@@ -41,6 +43,11 @@
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "de9bc309-23d8-4999-b028-d603a7b3d199"
+      }
+    }
   }
 }

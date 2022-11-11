@@ -5,6 +5,7 @@ import { Accelerometer, Gyroscope, Magnetometer } from 'expo-sensors';
 import ItemView from '../../view/ItemView';
 import { useAppContext } from '../../../AppContext';
 import AHRS from 'ahrs';
+import Arrow3dView from '../../view/chart/Arrow3dView';
 
 function AttitudeHeadingReferenceSystemsPlugin() {
 
@@ -59,14 +60,14 @@ function AttitudeHeadingReferenceSystemsPlugin() {
         gyroSubscription && gyroSubscription.remove()
         setGyroSubscription(null)
 
-        magnSubscription && magnSubscription.remove();
-        setMagnSubscription(null);
-    };
+        magnSubscription && magnSubscription.remove()
+        setMagnSubscription(null)
+    }
 
     React.useEffect(() => {
-        _subscribe();
+        _subscribe()
         return () => _unsubscribe()
-    }, []);
+    }, [])
 
     function round(x) {
         return x.toFixed(4)
@@ -77,7 +78,7 @@ function AttitudeHeadingReferenceSystemsPlugin() {
         algorithm: 'Madgwick',
     })).current
 
-    const [quaternion, setQuaternion] = React.useState({x: 0, y: 0, z: 0, w: 1})
+    const [eulerAngles, setEulerAngles] = React.useState({x: 0, y: 0, z: 0})
 
     React.useEffect(() => {
         // const Axr = Math.acos(x / R)
@@ -91,17 +92,17 @@ function AttitudeHeadingReferenceSystemsPlugin() {
         //     console.log(res)
         // })
         madgwick.update(gyro.x, gyro.y, gyro.z, accel.x, accel.y, accel.z, magn.x, magn.y, magn.z)
-        setQuaternion(old => {
-            let newObj = madgwick.getEulerAngles()
+        setEulerAngles(() => {
+            const newObj = madgwick.getEulerAngles()
             return {x: newObj.roll, y: newObj.pitch, z: newObj.heading}
         })
     }, [magn])
 
     React.useEffect(() => {
-        ws.emit('plugin', 'AttitudeHeadingReferenceSystems', quaternion, res => {
+        ws.emit('plugin', 'AttitudeHeadingReferenceSystems', eulerAngles, res => {
             console.log(res)
         })
-    }, [quaternion])
+    }, [eulerAngles])
 
     // const [R, setR] = React.useState(0)
     // React.useEffect(() => {
@@ -116,6 +117,10 @@ function AttitudeHeadingReferenceSystemsPlugin() {
                     <ItemView text={`y: ${round(accel.y)}`}/>
                     <ItemView text={`z: ${round(accel.z)}`}/>
                 </ListView>
+                {/* <ListView title='Arrow 3d View'>
+                    <Arrow3dView angles={eulerAngles}/>
+                </ListView> */}
+                
                 <ListView title='Gyroscope'>
                     <ItemView text={`x: ${round(gyro.x)}`}/>
                     <ItemView text={`y: ${round(gyro.y)}`}/>
@@ -132,10 +137,10 @@ function AttitudeHeadingReferenceSystemsPlugin() {
                     <ItemView text='Fast' onPress={_fast}/>
                 </ListView>
                 <ListView title='Analysis'>
-                    <ItemView text={'x: ' + round(quaternion.x)}/>
-                    <ItemView text={'y: ' + round(quaternion.y)}/>
-                    <ItemView text={'z: ' + round(quaternion.z)}/>
-                    {/* <ItemView text={'w: ' + round(quaternion.w)}/> */}
+                    <ItemView text={'x: ' + round(eulerAngles.x)}/>
+                    <ItemView text={'y: ' + round(eulerAngles.y)}/>
+                    <ItemView text={'z: ' + round(eulerAngles.z)}/>
+                    {/* <ItemView text={'w: ' + round(eulerAngles.w)}/> */}
 
                 </ListView>
                 {/* <ListView title='Analysis'>

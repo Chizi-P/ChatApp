@@ -85,7 +85,6 @@ function MagnetometerPlugin(props) {
                 {/* <ItemView text={`φ = ${magneticAzimuth(x, y)}`}/> */}
                 {/* <ItemView text={``}/> */}
             {/* </ListView> */}
-            <ChartView y={chartData}/>
         </SafeAreaView>
     )
 }
