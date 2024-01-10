@@ -1,80 +1,59 @@
-import React from 'react'
-import InitConnectSocket from './app/func/InitConnectSocket'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as SQLite from 'expo-sqlite';
-
-const db = SQLite.openDatabase('db.chat')
+import React, { useEffect, useState } from 'react'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
+import manager from './app/func/Manager'
 
 export const AppContext = React.createContext({
-    ws: null,
-    db: db,
-    // 好友
-    friends: null,
-    setFriends: friends => {},
-    // 聊天記錄
-    chatRecords: null,
-    setChatRecords: chatRecords => {},
+    socket  : null,
+    setSocket: () => {},
+    manager : manager,
+    updateGroup: false,
+    setUpdateGroup: () => {},
+    user    : {},
+    setUser : () => {},
+    friends : [],
+    setFriends: () => {},
+    // groups  : [],
+    // setGroups: () => {},
     // 當前打開的頁面
-    currentChannel: null,
+    currentChannel: '',
     setCurrentChannel: currentChannel => {}
 })
 
-export const AppProvider = ({children}) => {
+export const AppProvider = ({ children }) => {
 
-    const [currentChannel, setCurrentChannel] = React.useState('')
+    // setUpdateGroup(toggle)
+    const [updateGroup, setUpdateGroup] = useState(false)
 
-    // 加載好友
-    const PresetFriends = [
-        {name: 'Tom', id: 'Tom', type: 'Chat'}, 
-        {name: 'Amy', id: 'Amy', type: 'Chat'}, 
-        {name: 'plugin', id: 'plugin', type: 'Plugin'}
-    ]
-    const [friends, setFriends] = React.useState(PresetFriends)
-    React.useEffect(() => {
-        (async () => {
-            const storagedFriends = await AsyncStorage.getItem('@friends')
-            if (storagedFriends === null) {
-                await AsyncStorage.setItem('@friends', JSON.stringify(PresetFriends))
-            } else {
-                setFriends(JSON.parse(storagedFriends))
-            }
-        })()
-    }, [])
-
-    // 加載聊天記錄
-    const PresetChatRecords = {sent: {}, received: {}}
-    const [chatRecords, setChatRecords] = React.useState(PresetChatRecords)
-    React.useEffect(() => {
-        (async () => {
-            const storagedChatRecords = await AsyncStorage.getItem('@chatRecords')
-            if (storagedChatRecords === null) {
-                await AsyncStorage.setItem('@chatRecords', JSON.stringify(PresetChatRecords))
-            } else {
-                setChatRecords(JSON.parse(storagedChatRecords))
-            }
-        })()
-    }, [])
+    const [currentChannel, setCurrentChannel] = useState('')
     
-    // socket 連線
-    const [ws, setWs] = React.useState(null)
-    React.useEffect(() => {
-        (async () => setWs(await InitConnectSocket(chatRecords, setChatRecords)))()
-        return () => ws && ws.close()
+    const [user, setUser] = useState({})
+    const [friends, setFriends] = useState([])
+    // const [groups, setGroups] = useState([])
+    
+    // 退出時關閉 socket
+    const [socket, setSocket] = React.useState(null)
+    useEffect(() => {
+        return () => socket && socket.close()
     }, [])
 
     return (
-        <AppContext.Provider value={{
-            ws, 
-            friends,
-            setFriends,
-            chatRecords, 
-            setChatRecords,
-            currentChannel,
-            setCurrentChannel,
-            db
-        }}>
-            {children}
-        </AppContext.Provider>
+            <AppContext.Provider value={{
+                socket,
+                setSocket,
+                manager,
+                updateGroup,
+                setUpdateGroup,
+                user,
+                setUser,
+                friends,
+                setFriends,
+                // groups,
+                // setGroups,
+                currentChannel,
+                setCurrentChannel
+            }}>
+                {children}
+            </AppContext.Provider>
     )
 }
 

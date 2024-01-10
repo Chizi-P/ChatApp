@@ -7,10 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateSentChatRecords } from '../../func/UpdateChatRecords'
 import { useAppContext } from '../../../AppContext'
 
-function TextInputBarView({ setChatRecords, friendID, style }) {
+function TextInputBarView({ groupID, style }) {
     const [text, setText] = React.useState('')
 
-    const ws = useAppContext().ws
+    const socket = useAppContext().socket
 
     return (
         <LayoutView
@@ -26,20 +26,12 @@ function TextInputBarView({ setChatRecords, friendID, style }) {
             <SendButtonView
                 onSend={() => {
                     if (text === '') return
-                    ws.emit('msg', { to: friendID, content: text}, async res => {
-                        if (res.state === 'sent')  {
-                            console.log('發送成功！')
-                            const data = {
-                                content: text,
-                                date: res.date
-                            }
-                            const newChatRecords = await UpdateSentChatRecords(friendID, data)
-                            setChatRecords(newChatRecords)
-                            setText('')
-                        }
-                        else if (res.state === 'error') console.log('發送失敗！')
+                    // { to: friendID, content: text}
+                    socket.emit('message', groupID, text, async res => {
+                        if (!res.ok) return console.log('發送失敗！', res.msg)
+                        console.log(res.msg)
+                        setText('')
                     })
-
                 }}
             />
         </LayoutView>
@@ -80,10 +72,6 @@ function SendButtonView({ onSend }) {
             color   = "orange"
         />
     )
-}
-
-const sendMsg = (ws, to, msg) => {
-
 }
 
 export default TextInputBarView

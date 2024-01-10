@@ -9,7 +9,7 @@ import Arrow3dView from '../../view/chart/Arrow3dView';
 
 function AttitudeHeadingReferenceSystemsPlugin() {
 
-    const ws = useAppContext().ws
+    const socket = useAppContext().socket
 
     const [accel, setAccel] = React.useState({ x: 0, y: 0, z: 0 })
     const [gyro, setGyro] = React.useState({ x: 0, y: 0, z: 0 })
@@ -84,7 +84,7 @@ function AttitudeHeadingReferenceSystemsPlugin() {
         // const Axr = Math.acos(x / R)
         // const Ayr = Math.acos(y / R)
         // const Azr = Math.acos(z / R)
-        // ws.emit('plugin', 'Accelerometer', { 
+        // socket.emit('plugin', 'Accelerometer', { 
         //     x: isNaN(Axr) ? Math.PI : Axr, 
         //     y: isNaN(Ayr) ? Math.PI : Ayr, 
         //     z: isNaN(Azr) ? Math.PI : Azr
@@ -99,7 +99,7 @@ function AttitudeHeadingReferenceSystemsPlugin() {
     }, [magn])
 
     React.useEffect(() => {
-        ws.emit('plugin', 'AttitudeHeadingReferenceSystems', eulerAngles, res => {
+        socket.emit('plugin', 'AttitudeHeadingReferenceSystems', eulerAngles, res => {
             console.log(res)
         })
     }, [eulerAngles])

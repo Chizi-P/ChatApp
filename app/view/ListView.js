@@ -11,7 +11,7 @@ import LayoutView from './LayoutView'
 import ItemView from './ItemView'
 import ZStack from './ZStack'
 
-function ListView({ title, initExpand = true, expanded, setExpanded, children, onPress = () => {}, ...props }) {
+function ListView({ title, initExpand = true, expanded, setExpanded, disable = false, children, onPress = () => {}, ...props }) {
 
     if (!expanded && !setExpanded) {
         var [expanded, setExpanded] = React.useState(initExpand)
@@ -26,7 +26,7 @@ function ListView({ title, initExpand = true, expanded, setExpanded, children, o
             <TitleView
                 title={'░░ ' + title}
                 expanded={expanded}
-                setExpanded={setExpanded}
+                setExpanded={disable ? () => {} : setExpanded}
                 style={{ display: title && expanded ? 'flex' : 'none' }}
             />
             <View
@@ -50,7 +50,7 @@ function ListView({ title, initExpand = true, expanded, setExpanded, children, o
                             title={title}
                             highlight
                             expanded={expanded}
-                            setExpanded={setExpanded}
+                            setExpanded={disable ? () => {} : setExpanded}
                             style={{ display: expanded ? 'none' : 'flex' }}
                         />
                     )}

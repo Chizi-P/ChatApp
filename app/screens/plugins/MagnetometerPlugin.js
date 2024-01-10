@@ -8,7 +8,7 @@ import ChartView, { useChartData } from '../../view/chart/ChartView';
 
 function MagnetometerPlugin(props) {
 
-    const ws = useAppContext().ws
+    const socket = useAppContext().socket
 
     const [data, setData] = React.useState({
         x: 0,
@@ -57,7 +57,7 @@ function MagnetometerPlugin(props) {
     }
 
     React.useEffect(() => {
-        // ws.emit('plugin', 'Magnetometer', { x, y, z }, res => {
+        // socket.emit('plugin', 'Magnetometer', { x, y, z }, res => {
         //     console.log(res)
         // })
         // setAccData(old => {

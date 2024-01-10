@@ -5,10 +5,10 @@ import LayoutView from './LayoutView';
 import ListView from './ListView';
 import MyAppText from './MyAppText';
 
-function ToggleView({...props}) {
+function ToggleView({title, ...props}) {
     return (
         <View {...props}>
-            <LayoutView horizontal><ItemView text='Connect to the server'/></LayoutView>
+            <LayoutView horizontal><ItemView text={title}/></LayoutView>
         </View>
     );
 }

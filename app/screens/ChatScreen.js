@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
@@ -14,54 +14,89 @@ import ChatRecordView from '../view/chat/ChatRecordView'
 import TextInputBarView from '../view/chat/TextInputBarView'
 import colors from '../config/colors'
 import { useAppContext } from '../../AppContext'
-import { chatConfig } from '../config/chatConfig'
 import ListView from '../view/ListView'
 import ARecordView from '../view/chat/ARecordView'
 import ItemView from '../view/ItemView'
 
-function ChatScreen({ navigation, route }) {
-    const { friend } = route.params
-    const { chatRecords, setChatRecords } = useAppContext()
-    
-    const [chatRecord, setChatRecord] = React.useState([])
-    React.useEffect(() => {
-        console.log('chatRecords:', chatRecords)
-        let record = (
-            chatRecords.received[friend.id]?.map(e => {
-                return {...e, sender: friend.id}
-            }) ?? []
-        ).concat((
-            chatRecords.sent[friend.id]?.map(e => {
-                return {...e, sender: chatConfig.userId}
-            })) ?? []
-        )
-        record.sort((a, b) => a.date - b.date)
-        console.log('record:', record)
-        setChatRecord(record)
-    }, [chatRecords])
+function ChatScreen({ route }) {
+
+    const { groupID } = route.params
+
+    const { manager, currentChannel, setCurrentChannel, updateGroup } = useAppContext()
+    const [group, setGroup] = useState({})
+
+    const [messages, setMessages] = useState([])
+
+    useEffect(() => {
+        setCurrentChannel(groupID)
+        console.log('setCurrentChannel', groupID)
+        updateGroupData(groupID, setGroup, setMessages)
+        return () => {
+            console.log('currentChannel', currentChannel)
+            console.log('setCurrentChannel', '""')
+            setCurrentChannel('')
+        }
+    }, [])
+
+    // useEffect(() => {
+    //     setGroup(groups.find(group => group.id === groupID))
+    // }, [groups])
+
+    // useEffect(() => {
+    //     // load messages data
+    //     console.log('update messages')
+    //     if (group.messages === undefined) return
+    //     Promise.all(group.messages.map(id => manager.load('message', id)))
+    //         .then(setMessages)
+    //         .catch(console.warn)
+    // }, [group])
+
+
+
+    useEffect(() => {
+        // if (updateGroup !== groupID) return
+        updateGroupData(groupID, setGroup, setMessages)
+    }, [updateGroup])
+
+    // useEffect(() => {
+    //     // load messages data
+    //     console.log('update messages')
+        
+    //     // limit
+    //     // offset
+
+    //     if (group.messages === undefined) return
+    //     Promise.all(group.messages.map(async id => await AsyncStorage.getItem(`@message:${id}`)))
+    //         .then((messages) => {
+    //             console.log(messages)
+    //             setMessages(messages)
+    //         })
+    //         .catch(console.warn)
+    // }, [group])
 
     const flatListRef = React.useRef(null)
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ListView title={friend.name.toUpperCase()}>
+            {/* <ListView title={ group.name }>
                 <FlatList
                     ref                 = {flatListRef}
-                    data                = {chatRecord}
-                    renderItem          = {({ item }) => <ItemView text={item.content} /> }
+                    data                = {messages}
+                    renderItem          = {({ item: message, index }) => <ItemView text={message.content} /> }
                     keyExtractor        = {(item, i) => i}
                     onContentSizeChange = {() => {
                         flatListRef.current.scrollToEnd()
                     }}
                     scrollEnabled
                 />
-            </ListView>
-            {/* <LayoutView
+            </ListView> */}
+            <LayoutView
                 horizontal
                 margin={25}
                 spacing={10}
                 style={{ alignItems: 'center' }}
             >
+
                 <Image
                     style={{
                         backgroundColor: colors.loading,
@@ -70,20 +105,33 @@ function ChatScreen({ navigation, route }) {
                         borderRadius: 6,
                     }}
                 />
-                <MyAppText>{friend.name}</MyAppText>
-            </LayoutView> */}
+                <MyAppText>{group.name}</MyAppText>
+
+            </LayoutView>
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1, justifyContent: 'flex-end' }}
             >
-                {/* <ChatRecordView
-                    chatRecord={chatRecord}
+
+                <ChatRecordView
+                    chatRecord={messages}
                     style={{ marginHorizontal: 25, flex: 1 }}
-                /> */}
-                <TextInputBarView setChatRecords={setChatRecords} friendID={friend.id}/>
+                />
+
+                <TextInputBarView groupID={groupID}/>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
+}
+
+async function updateGroupData(groupID, setGroup, setMessages) {
+    const group = JSON.parse(await AsyncStorage.getItem(`@group:${groupID}`))
+    setGroup(group)
+
+    if (group.messages === undefined) return
+    const messages = await Promise.all(group.messages.map(async id => JSON.parse(await AsyncStorage.getItem(`@message:${id}`)))).catch(console.warn)
+    console.log(messages)
+    setMessages(messages)
 }
 
 export default ChatScreen

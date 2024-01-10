@@ -3,42 +3,43 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateReceivedChatRecords } from './UpdateChatRecords'
 import { schedulePushNotification } from './InitNotifications'
 
-export default InitConnectSocket = async (chatRecords, setChatRecords) => {
+export default InitConnectSocket = async (setUpdateGroup, setCurrentChannel) => {
 
-    const token = await AsyncStorage.getItem('@token')
+    const token = await AsyncStorage.getItem('@user.token')
 
-    const ws = io('http://172.26.1.66:3000/chat', { 
-        auth: {
-            token: '00000',
-            // token: token,
-            // account: '',
-            // password: ''
-        }, 
+    const socket = io('ws://192.168.0.16:3000/', { 
+        extraHeaders: {
+            token: token
+        }
         // query: { 
         //     isRememberLoginStatus: true
         // } 
     })
 
-    ws.on('connect', () => {
+    socket.on('connect', () => {
         console.log('client connect success')
-        ws.on('msg', async (sender, data, callback) => {
-            console.log('data:', data)
-            const newChatRecords = await UpdateReceivedChatRecords(sender, data)
-            callback({ state: 'received' })
-            setChatRecords(newChatRecords)
-            await schedulePushNotification(sender, data.content)
-        })
-        ws.once('token', async (token, callback) => {
-            console.log('got token:', token)
-            await AsyncStorage.setItem('@token', token)
-            callback({ state: 'ok'})
-        })
-        ws.emit('getFriendsData', ['Tom', 'Amy'], res => {
-            console.log(res)
+        socket.on('message', async (message, callback) => {
+            console.log('[received]')
+            console.log('groupID:\t', message.to)
+            console.log('from:\t', message.from)
+            console.log('content:\t', message.content)
+
+            const group = JSON.parse(await AsyncStorage.getItem(`@group:${message.to}`))
+            group.messages.push(message.id)
+            await AsyncStorage.multiSet([
+                [`@group:${message.to}`, JSON.stringify(group)],
+                [`@message:${message.id}`, JSON.stringify(message)]
+            ]).catch(console.warn)
+            setUpdateGroup(val => !val)
+
+            // setCurrentChannel(val => {
+            //     if (val !== message.to) schedulePushNotification(message.from, message.content)
+            //     return val
+            // })
         })
     })
-    ws.on('error', error => {
+    socket.on('error', error => {
         console.log(error)
     })
-    return ws
+    return socket
 }

@@ -10,12 +10,12 @@ import react from 'react';
 
 function ControlMousePlugin(props) {
 
-    const ws = useAppContext().ws
+    const socket = useAppContext().socket
 
     const [touch, setTouch] = React.useState({x: 0, y: 0})
 
     function sendPosition({x, y}) {
-        ws.emit('plugin', 'ControlMouse', arguments[0])
+        socket.emit('plugin', 'ControlMouse', arguments[0])
     }
 
     const cursorSize = 30

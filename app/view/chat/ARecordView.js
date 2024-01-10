@@ -2,14 +2,16 @@ import React from 'react'
 import MyAppText from '../MyAppText';
 import { View, Text } from 'react-native'
 import LayoutView from '../LayoutView';
-import { chatConfig } from '../../config/chatConfig'
+import { useAppContext } from '../../../AppContext';
 
 function ARecordView({record}) {
 
+    const { user } = useAppContext()
+
     return (
-        record.sender !== chatConfig.userId
-            ? <Received record={record}/>
-            : <Sent record={record}/>
+        record.from === user.id
+            ? <Sent record={record}/>
+            : <Received record={record}/>
     )
 }
 
@@ -43,8 +45,9 @@ function Received({record}) {
 
 function VerticalLine({ style }) {
     return (
-        <View style={{width: 5, backgroundColor: 'gray', borderRadius: '25%', ...style}}></View>
+        <View style={{width: 5, backgroundColor: 'gray', borderRadius: 4, ...style}}></View>
     )
 }
 
 export default ARecordView;
+

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     TouchableWithoutFeedback,
 } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ChatListItemView from '../view/ChatListItemView'
 import MyAppText from '../view/MyAppText'
@@ -18,18 +19,35 @@ import ItemView from '../view/ItemView'
 import ChartView from '../view/chart/ChartView'
 import { schedulePushNotification } from '../func/InitNotifications'
 
-function HomeScreen({ navigation }) {
+function HomeScreen() {
+
+    // FIXME - groups
+    const { manager, user, updateGroup } = useAppContext()
+    const navigation = useNavigation()
+
+    const [groups, setGroups] = useState([])
+
+    useEffect(() => {
+        console.log(user)
+        Promise.all([...user.groups, ...user.directGroups].map(async groupID => 
+            JSON.parse(await AsyncStorage.getItem(`@group:${groupID}`))
+        ))
+        .then(setGroups)
+        .catch(console.warn)
+    }, [])
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ListView title="CHAT LIST">
+            <ListView title={user.name + " - CHAT LIST"}>
                 <FlatList
-                    data={useAppContext().friends}
-                    renderItem={({ item: friend }) => (
+                    data={groups}
+                    renderItem={({ item: group, index }) => (
                         <ItemView
-                            text={friend.name.toUpperCase()}
-                            onPress={() =>
-                                navigation.navigate(friend.type, { friend })
-                            }
+                            text={group.name}
+                            onPress={() => {
+                                console.log(group)
+                                navigation.navigate('Chat', { groupID: group.id, name: group.name })
+                            }}
                         />
                     )}
                     keyExtractor={(item, i) => i}

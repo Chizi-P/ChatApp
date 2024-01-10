@@ -7,7 +7,7 @@ import { useAppContext } from '../../../AppContext';
 
 function GyroscopePlugin(props) {
 
-    const ws = useAppContext().ws
+    const socket = useAppContext().socket
 
     const [data, setData] = React.useState({
         x: 0,
@@ -50,7 +50,7 @@ function GyroscopePlugin(props) {
     }
 
     React.useEffect(() => {
-        ws.emit('plugin', 'Gyroscope', { x, y, z }, res => {
+        socket.emit('plugin', 'Gyroscope', { x, y, z }, res => {
             console.log(res)
         })
     }, [data])

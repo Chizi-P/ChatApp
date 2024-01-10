@@ -17,8 +17,12 @@ import TestScreen from './app/screens/TestScreen';
 import PluginScreen from './app/screens/PluginScreen';
 import PluginAppScreen from './app/screens/PluginAppScreen';
 import SettingScreen from './app/screens/SettingScreen';
+import LoginScreen from './app/screens/LoginScreen'
+import InitScreen from './app/screens/InitScreen'
 
 const Stack = createStackNavigator()
+
+SplashScreen.preventAutoHideAsync()
 
 export default function App() {
 
@@ -28,6 +32,18 @@ export default function App() {
     const notificationListener = React.useRef();
     const responseListener = React.useRef();
     React.useEffect(InitNotifications(setExpoPushToken, setNotification, notificationListener, responseListener), []);
+
+    // React.useEffect(() => {
+    //     const prepare = async () => {
+    //         // 執行你的加載任務，例如：資料加載、字體加載等
+        
+    //         // 完成後隱藏啟始畫面
+    //         await SplashScreen.hideAsync();
+    //     }
+    
+    //     prepare();
+    // }, []);
+    
     
     // 首次打開
     const [firstLaunch, setFirstLaunch] = React.useState(null)
@@ -75,14 +91,16 @@ export default function App() {
                     screenOptions={{
                         headerShown: false,
                     }}
+                    initialRouteName='SignIn'
                 >
                     {/* <Stack.Screen name="Test" component={ TestScreen } /> */}
+                    <Stack.Screen name="Login" component={ LoginScreen } />
+                    <Stack.Screen name="Init" component={ InitScreen } />
                     <Stack.Screen name="Home" component={ HomeScreen } />
                     <Stack.Screen name="Chat" component={ ChatScreen } />
                     <Stack.Screen name="Setting" component={ SettingScreen }/>
                     <Stack.Screen name="Plugin" component={ PluginScreen } />
                     <Stack.Screen name="PluginApp" component={ PluginAppScreen } />
-                    
                 </Stack.Navigator>
             </NavigationContainer>
         </AppProvider>
