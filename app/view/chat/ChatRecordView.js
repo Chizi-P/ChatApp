@@ -1,27 +1,128 @@
-import React from 'react';
-import { View, Text, FlatList, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, ActivityIndicator, ScrollView, LayoutAnimation, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ARecordView from './ARecordView'
+import MyAppText from '../MyAppText';
+import { BlurView } from 'expo-blur';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 
-function ChatRecordView({chatRecord, style}) {
+function loadMore(messages, setLoadedMessages, offset, setOffset, limit) {
+    console.log('offset:', offset)
+    console.log('loadedMessages', messages.slice(0, offset + limit))
+    setLoadedMessages(messages.slice(0, offset + limit))
+    setOffset(offset + limit)
+}
+
+function ChatRecordView({messages = [], style}) {
 
     const flatListRef = React.useRef(null)
 
+    const [showBackTopButton, setShowBackTopButton] = useState(false)
+
+    // const [offset, setOffset] = useState(0)
+    // const [page, setPage] = useState(1)
+
+    // const limit = 50
+
+    // const [loadedMessages, setLoadedMessages] = useState(messages.slice(0, limit))
+
+    // useEffect(() => {
+    //     loadMore(messages, setLoadedMessages, offset, setOffset, limit)
+    // }, [])
+
     return (
         <View style={{...style}}>
+            {/* <View style={{
+                position: 'absolute', 
+                bottom: 0,
+                zIndex: 1,
+                
+                backgroundColor: 'red', 
+                width: '100%',
+                height: 50,
+                borderRadius: 15,
+                borderColor: 'yellow',
+                borderWidth: 1,
+                
+            }}></View> */}
+
+
             <FlatList
                 ref                 = {flatListRef}
-                data                = {chatRecord}
-                renderItem          = {({ item }) => <ARecordView record={ item }/> }
-                keyExtractor        = {(item, i) => i}
+                data                = {messages}
+                renderItem          = {({ item: messageID }) => <ARecordView messageID={ messageID }/> }
+                keyExtractor        = {messageID => messageID.toString()}
                 onContentSizeChange = {() => {
-                    flatListRef.current.scrollToEnd()
+                    // flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
+                    // flatListRef.current.scrollToEnd()
                 }}
+                // ListFooterComponent={ <MyAppText>最上面了</MyAppText> }
+                // ListFooterComponentStyle={{alignSelf: 'center'}}
+                ListEmptyComponent={ <MyAppText>無聊天記錄</MyAppText> }
+                initialNumToRender={25}
+                windowSize={10}
+                inverted
                 scrollEnabled
+                onScroll={event => {
+                    if (event.nativeEvent.contentOffset.y > 1000) {
+                        if (showBackTopButton === false) {
+                            BackTopButtonAnimation()
+                        }
+                        setShowBackTopButton(true)
+                    } else {
+                        if (showBackTopButton === true) {
+                            BackTopButtonAnimation()
+                        }
+                        setShowBackTopButton(false)
+                    }
+                }}
             />
+            { showBackTopButton ? <TouchableOpacity 
+                style={{
+                    position: 'absolute', 
+                    width: 50,
+                    bottom: 0, 
+                    zIndex: 1,
+                    overflow: 'hidden',
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    borderColor: 'rgba(255, 255, 255, .5)',
+                    height: 50,
+                    alignSelf: 'center',
+                    justifyContent: 'center',
+                    margin: 5
+                }} 
+                activeOpacity={1}
+                onPress={() => {
+                    flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
+                }}
+            >
+                <BlurView style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }} intensity={15}>
+                    <FontAwesomeIcon icon={faArrowDown} color='white'/>
+                </BlurView>
+            </TouchableOpacity> : <></>}
         </View>
     )
-    
+}
+
+const BackTopButtonAnimation = () => {
+    LayoutAnimation.configureNext({
+        duration: 250,
+        create: {
+            type: LayoutAnimation.Types.easeOut,
+            property: 'opacity'
+        },
+        delete: {
+            type: LayoutAnimation.Types.easeOut,
+            property: 'opacity'
+        }
+    })
 }
 
 export default ChatRecordView;
+

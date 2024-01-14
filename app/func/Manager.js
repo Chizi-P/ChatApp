@@ -7,9 +7,10 @@ class Manager {
         AsyncStorage.getItem('@user.token', (err, token) => {
             this.token = token
         })
+        this.defaultExpires = 1000 * 60
     }
     
-    async getData(url, param, body = {}) {
+    async get(url, param, body = {}) {
         const response = await fetch(new URL(url, this.baseURL), { 
             method  : 'GET', 
             headers : new Headers({
@@ -18,14 +19,19 @@ class Manager {
             })
         })
         const responseText = await response.text()
-        return JSON.parse(responseText)
+        
+        return {
+            status : response.status,
+            data   : JSON.parse(responseText)
+        }
     }
 
-    async get(repo, id = '') {
-        const data = await this.getData(`/${repo}/` + id)
-        console.log(`get ${repo}\t${id} ok:`, !!data)
-        if (!data) throw new Error(`error ${repo} ${id}`)
-        return data
+    async getData(repo, id = '') {
+        const getResponse = await this.get(`/${repo}/` + id)
+        // OPT
+        console.log(`get ${repo}\t${id} ok:`, !!getResponse.data)
+        if (!getResponse.data) throw new Error(`error ${repo} ${id}`)
+        return getResponse
     }
 
     async login(email, password) {
@@ -40,23 +46,54 @@ class Manager {
         const user = JSON.parse(responseText)
         if (user.token === undefined) return false
         await AsyncStorage.setItem('@user.token', user.token)
-        await AsyncStorage.setItem('@user.id', user.userID)
         return true
     }
     
     async logout() {
-        await AsyncStorage.removeItem('@user.token')
+        return await AsyncStorage.removeItem('@user.token')
+    }
+    async setExpires(key, expires = this.defaultExpires) {
+        return await AsyncStorage.setItem(key + '.expires', (Date.now() + expires).toString())
+    }
+
+    async isExpired(key) {
+        let expires = await AsyncStorage.getItem(key + '.expires')
+        if (expires === null) return true
+        return parseInt(expires) < Date.now()
     }
 
     async load(repo, id) {
-        // FIXME - 附帶最後更新時間
-        const data = await this.get(repo, id)
-        if (true) { // FIXME - 需要更新
-            await AsyncStorage.setItem(`@${repo}${id ? `:${id}` : ''}`, JSON.stringify(data)).catch(console.warn)
-            return data
-        } else { // 不需要更新，返回舊數據
-            return JSON.parse(await AsyncStorage.getItem(`@${repo}`))
+        console.log('loading', repo, id)
+
+        const key = `@${repo}${id ? `:${id}` : ''}`
+        // 獲取本地數據
+        let oldData = await AsyncStorage.getItem(key)
+        // 數據不存在
+        if (oldData === null) {
+            const getResponse = await this.getData(repo, id)
+            await this.setExpires(key)
+            await AsyncStorage.setItem(key, JSON.stringify(getResponse.data)).catch(console.warn)
+            return getResponse.data
         }
+        // 數據存在
+        oldData = JSON.parse(oldData)
+
+        // 未過期
+        if (!await this.isExpired(key)) return oldData
+
+        // 過期了
+        // 獲取新數據
+        const getResponse = await this.getData(repo, id)
+        const newData = getResponse.data
+        // 獲取失敗 返回舊數據
+        if (getResponse.status >= 300) return oldData
+        await this.setExpires(key)
+
+        // 內容有更新
+        // if (oldData.lastUpdatedTime !== newData.lastUpdatedTime) {
+            await AsyncStorage.setItem(key, JSON.stringify(newData)).catch(console.warn)
+        // }
+        return newData
     }
 }
 

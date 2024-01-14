@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateReceivedChatRecords } from './UpdateChatRecords'
 import { schedulePushNotification } from './InitNotifications'
 
-export default InitConnectSocket = async (setUpdateGroup, setCurrentChannel) => {
+export default InitConnectSocket = async (manager, setUpdateGroup, setCurrentChannel) => {
 
     const token = await AsyncStorage.getItem('@user.token')
 
@@ -25,7 +25,8 @@ export default InitConnectSocket = async (setUpdateGroup, setCurrentChannel) => 
             console.log('content:\t', message.content)
 
             const group = JSON.parse(await AsyncStorage.getItem(`@group:${message.to}`))
-            group.messages.push(message.id)
+
+            group.messages.splice(0, 0, message.id)
             await AsyncStorage.multiSet([
                 [`@group:${message.to}`, JSON.stringify(group)],
                 [`@message:${message.id}`, JSON.stringify(message)]

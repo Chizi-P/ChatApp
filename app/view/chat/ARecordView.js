@@ -1,26 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MyAppText from '../MyAppText';
 import { View, Text } from 'react-native'
 import LayoutView from '../LayoutView';
 import { useAppContext } from '../../../AppContext';
 
-function ARecordView({record}) {
+function ARecordView({ messageID }) {
 
-    const { user } = useAppContext()
+    const { manager, user } = useAppContext()
+
+    const [message, setMessage] = useState({})
+
+    useEffect(() => {
+        manager.load('message', messageID)
+            .then(setMessage)
+            .catch(console.warn)
+    }, [])
 
     return (
-        record.from === user.id
-            ? <Sent record={record}/>
-            : <Received record={record}/>
+        message.from !== undefined 
+            ? message.from === user.id
+                ? <Sent message={message}/>
+                : <Received message={message}/>
+            : <></>
     )
 }
 
-function Sent({record}) {
+function Sent({message}) {
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
                 <MyAppText style={{textAlign: 'right', width: '80%'}}>
-                    {record.content}
+                    {message.content}
                 </MyAppText>
                 <VerticalLine style={{backgroundColor: 'dodgerblue'}}/>
             </LayoutView>
@@ -30,13 +40,13 @@ function Sent({record}) {
 
 <Text style={{textAlign: 'right'}} ></Text>
 
-function Received({record}) {
+function Received({message}) {
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-start', alignSelf: 'flex-start'}}>
                 <VerticalLine style={{backgroundColor: 'royalblue'}}/>
                 <MyAppText style={{textAlign: 'left', width: '80%'}}>
-                    {record.content}
+                    {message.content}
                 </MyAppText>
             </LayoutView>
         </LayoutView>

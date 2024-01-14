@@ -28,9 +28,8 @@ function HomeScreen() {
     const [groups, setGroups] = useState([])
 
     useEffect(() => {
-        console.log(user)
         Promise.all([...user.groups, ...user.directGroups].map(async groupID => 
-            JSON.parse(await AsyncStorage.getItem(`@group:${groupID}`))
+            await manager.load('group', groupID)
         ))
         .then(setGroups)
         .catch(console.warn)
@@ -46,7 +45,10 @@ function HomeScreen() {
                             text={group.name}
                             onPress={() => {
                                 console.log(group)
-                                navigation.navigate('Chat', { groupID: group.id, name: group.name })
+                                navigation.navigate('Chat', {
+                                    group, 
+                                    // groupID: group.id, name: group.name 
+                                })
                             }}
                         />
                     )}

@@ -30,7 +30,7 @@ function InitScreen() {
 
     // socket 連線
     useEffect(() => {
-        (async () => setSocket(await InitConnectSocket(setUpdateGroup, setCurrentChannel)))().then(() => {
+        (async () => setSocket(await InitConnectSocket(manager, setUpdateGroup, setCurrentChannel)))().then(() => {
             setLoadedSocket(true)
         })
     }, [])
@@ -39,16 +39,12 @@ function InitScreen() {
         manager.load('user').then(user => {
             setUser(user)
             setLoadedUserData(true)
+            
             Promise.all(user.friends.map(async id => await manager.load('user', id)))
-            .then(friends => {
-                // setFriends(friends)
-                setLoadedFriendsData(true)
-            })
+                .then(setLoadedFriendsData(true))
+                
             Promise.all([...user.groups, ...user.directGroups].map(async id => await manager.load('group', id)))
-            .then(groups => {
-                // setGroups(groups)
-                setLoadedGroupsData(true)
-            })
+                .then(setLoadedGroupsData(true))
         })
     }, [])
 
