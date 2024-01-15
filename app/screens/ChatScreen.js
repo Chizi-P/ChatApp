@@ -43,22 +43,6 @@ function ChatScreen({ route }) {
         manager.load('group', groupID).then(setGroup)
     }, [updateGroup])
 
-    // useEffect(() => {
-    //     // load messages data
-    //     console.log('update messages')
-        
-    //     // limit
-    //     // offset
-
-    //     if (group.messages === undefined) return
-    //     Promise.all(group.messages.map(async id => await AsyncStorage.getItem(`@message:${id}`)))
-    //         .then((messages) => {
-    //             console.log(messages)
-    //             setMessages(messages)
-    //         })
-    //         .catch(console.warn)
-    // }, [group])
-
     const flatListRef = React.useRef(null)
 
     return (

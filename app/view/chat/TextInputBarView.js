@@ -1,11 +1,13 @@
 import React from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
 import LayoutView from '../LayoutView'
 import MyAppText from '../MyAppText'
 import colors from '../../config/colors'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateSentChatRecords } from '../../func/UpdateChatRecords'
 import { useAppContext } from '../../../AppContext'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 
 function TextInputBarView({ groupID, style }) {
     const [text, setText] = React.useState('')
@@ -66,11 +68,9 @@ function TextInputView({ text, setText }) {
 
 function SendButtonView({ onSend }) {
     return (
-        <Button
-            onPress = {onSend}
-            title   = "Send"
-            color   = "orange"
-        />
+        <TouchableOpacity onPress={onSend} style={{ padding: 15 }}>
+            <FontAwesomeIcon icon={faPaperPlane} color='white'/>
+        </TouchableOpacity>
     )
 }
 
