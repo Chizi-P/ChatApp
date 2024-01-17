@@ -22,6 +22,7 @@ export default InitConnectSocket = async (manager, setUpdateGroup, setCurrentCha
             console.log('[received]')
             console.log('groupID:\t', message.to)
             console.log('from:\t', message.from)
+            console.log('type:\t', message.type)
             console.log('content:\t', message.content)
 
             const group = JSON.parse(await AsyncStorage.getItem(`@group:${message.to}`))

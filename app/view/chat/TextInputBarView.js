@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
 import LayoutView from '../LayoutView'
 import MyAppText from '../MyAppText'
@@ -7,12 +7,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateSentChatRecords } from '../../func/UpdateChatRecords'
 import { useAppContext } from '../../../AppContext'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import * as ImagePicker from 'expo-image-picker'
 
 function TextInputBarView({ groupID, style }) {
-    const [text, setText] = React.useState('')
+    const [text, setText] = useState('')
+    const [image, setImage] = useState(null)
+    const [type, setType] = useState('text')
+    const { manager } = useAppContext()
+    
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        })
 
-    const socket = useAppContext().socket
+        if (result.canceled) return
+    
+        setImage(result.assets[0].uri)
+        const res = await manager.uploadImage(result.assets[0].uri)
+        await manager.sendMessage(groupID, 'image', res.url)
+        console.log('res', res.url)
+    }
 
     return (
         <LayoutView
@@ -24,16 +43,21 @@ function TextInputBarView({ groupID, style }) {
                 ...style,
             }}
         >
+            
+            <TouchableOpacity 
+                style={{ padding: 15 }}
+                onPress={pickImage}
+            >
+                <FontAwesomeIcon icon={faImage} color='white'/>
+            </TouchableOpacity>
+
             <TextInputView text={text} setText={setText} />
             <SendButtonView
                 onSend={() => {
                     if (text === '') return
-                    // { to: friendID, content: text}
-                    socket.emit('message', groupID, text, async res => {
-                        if (!res.ok) return console.log('發送失敗！', res.msg)
-                        console.log(res.msg)
-                        setText('')
-                    })
+                    manager.sendMessage(groupID, type, text)
+                        .then(() => setText(''))
+                        .catch(console.warn)
                 }}
             />
         </LayoutView>

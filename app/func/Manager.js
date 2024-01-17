@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class Manager {
-    constructor() {
+    constructor(socket = null) {
         this.baseURL = 'http://192.168.0.16:3000/api/v1'
         this.token
         AsyncStorage.getItem('@user.token', (err, token) => {
             this.token = token
         })
         this.defaultExpires = 1000 * 60
+        this.socket = socket
     }
     
     async get(url, param, body = {}) {
@@ -95,6 +96,76 @@ class Manager {
         // }
         return newData
     }
+    async sendMessage(groupID, type, content) {
+        this.socket.emit('message', groupID, type, content, async res => {
+            if (!res.ok) {
+                console.log('發送失敗！', res.msg)
+                return Promise.reject('發送失敗！')
+            }
+            console.log(res.msg)
+            return Promise.resolve('發送成功！')
+        })
+    }
+
+    async uploadImage(image, progress) {
+
+        // ImagePicker saves the taken photo to disk and returns a local URI to it
+        let localUri = image
+        let filename = localUri.split('/').pop()
+
+        // Infer the type of the image
+        let match = /\.(\w+)$/.exec(filename)
+        let type = match ? `image/${match[1]}` : `image`
+
+        let formData = new FormData()
+        // Assume "photo" is the name of the form field the server expects
+        formData.append('file', { uri: image, name: filename, type })
+
+        const response = await fetch(new URL('/file', this.baseURL), { 
+            method  : 'POST', 
+            headers : new Headers({
+                "Content-Type": "multipart/form-data",
+                "Authorization": `Bearer ${this.token}`
+            }),
+            body: formData,
+        })
+        const url = await response.text()
+        
+        return {
+            status : response.status,
+            url
+        }
+    }
+    async getImageSourceBlurHash(url) {
+        const response = await fetch(new URL(url + '?blurhash=true', this.baseURL), { 
+            method  : 'GET', 
+            headers : new Headers({
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.token}`
+            })
+        })
+        const responseText = await response.text()
+        return responseText
+
+        // return {
+        //     uri: this.baseURL + url + '?blurhash=true',
+        //     method: 'GET',
+        //     headers : {
+        //         "Content-Type": "application/json",
+        //         "Authorization": `Bearer ${this.token}`
+        //     },
+        // }
+    }
+    getImageSource(url) {
+        return {
+            uri: this.baseURL + url,
+            method: 'GET',
+            headers : {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.token}`
+            }
+        }
+    }
 }
 
-export default new Manager()
+export default Manager

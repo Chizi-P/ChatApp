@@ -25,6 +25,9 @@ function ChatScreen({ route }) {
     const { manager, currentChannel, setCurrentChannel, updateGroup } = useAppContext()
     
     const [group, setGroup] = useState(initGroup)
+    // FIXME
+    const [sendingMessages, setSendingMessages] = useState([])
+
     const groupID = group.id
 
     useEffect(() => {

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 // import AsyncStorage from '@react-native-async-storage/async-storage'
-import manager from './app/func/Manager'
+import Manager from './app/func/Manager'
 
 export const AppContext = React.createContext({
     socket  : null,
     setSocket: () => {},
-    manager : manager,
+    manager : new Manager(),
     updateGroup: false,
     setUpdateGroup: () => {},
     user    : {},
@@ -40,7 +40,7 @@ export const AppProvider = ({ children }) => {
             <AppContext.Provider value={{
                 socket,
                 setSocket,
-                manager,
+                manager: new Manager(socket),
                 updateGroup,
                 setUpdateGroup,
                 user,

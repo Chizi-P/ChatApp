@@ -20,7 +20,7 @@ function TamperingPlugin(props) {
         })
         console.log(result)
 
-        if (result.cancelled) return
+        if (result.canceled) return
         setImage(result.uri)
 
         const imageBase64 = await FileSystem.readAsStringAsync(result.uri, {encoding: FileSystem.EncodingType.Base64})
