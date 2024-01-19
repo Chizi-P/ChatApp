@@ -33,21 +33,6 @@ function ChatRecordView({messages = [], style}) {
 
     return (
         <View style={{...style}}>
-            {/* <View style={{
-                position: 'absolute', 
-                bottom: 0,
-                zIndex: 1,
-                
-                backgroundColor: 'red', 
-                width: '100%',
-                height: 50,
-                borderRadius: 15,
-                borderColor: 'yellow',
-                borderWidth: 1,
-                
-            }}></View> */}
-
-
             <FlatList
                 ref                 = {flatListRef}
                 data                = {messages}
@@ -57,9 +42,31 @@ function ChatRecordView({messages = [], style}) {
                     // flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
                     // flatListRef.current.scrollToEnd()
                 }}
-                // ListFooterComponent={ <MyAppText>最上面了</MyAppText> }
+                ListFooterComponent={
+                    <View style={{
+                        backgroundColor: 'dimgray', 
+                        alignSelf: 'center',
+                        paddingVertical: 6,
+                        paddingHorizontal: 10,
+                        borderRadius: 10,
+                        marginBottom: 50
+                    }}>
+                        <MyAppText>最上面了</MyAppText>
+                    </View>
+                }
                 // ListFooterComponentStyle={{alignSelf: 'center'}}
-                ListEmptyComponent={ <MyAppText>無聊天記錄</MyAppText> }
+                ListEmptyComponent={ 
+                    <View style={{
+                        backgroundColor: 'dimgray', 
+                        alignSelf: 'center',
+                        paddingVertical: 6,
+                        paddingHorizontal: 10,
+                        borderRadius: 10,
+                        margin: 10
+                    }}>
+                        <MyAppText>無聊天記錄</MyAppText>
+                    </View>
+                }
                 initialNumToRender={25}
                 windowSize={10}
                 inverted
@@ -91,7 +98,7 @@ function ChatRecordView({messages = [], style}) {
                     height: 50,
                     alignSelf: 'center',
                     justifyContent: 'center',
-                    margin: 5
+                    margin: 5,
                 }} 
                 activeOpacity={1}
                 onPress={() => {
@@ -101,7 +108,7 @@ function ChatRecordView({messages = [], style}) {
                 <BlurView style={{
                     flex: 1,
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }} intensity={15}>
                     <FontAwesomeIcon icon={faArrowDown} color='white'/>
                 </BlurView>

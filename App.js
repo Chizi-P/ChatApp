@@ -14,8 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isFirstLaunch } from './app/func/firstLaunch';
 import InitNotifications from './app/func/InitNotifications';
 import TestScreen from './app/screens/TestScreen';
-import PluginScreen from './app/screens/PluginScreen';
-import PluginAppScreen from './app/screens/PluginAppScreen';
 import SettingScreen from './app/screens/SettingScreen';
 import LoginScreen from './app/screens/LoginScreen'
 import InitScreen from './app/screens/InitScreen'
@@ -70,7 +68,14 @@ export default function App() {
 
     // 加載字體
     const [fontsLoaded, fontsError] = useFonts({
-        'Cascadia-Code': require('./app/assets/fonts/CascadiaCode-2111.01/ttf/CascadiaCode.ttf')
+        'Cascadia-Code' : require('./app/assets/fonts/CascadiaCode-2111.01/ttf/CascadiaCode.ttf'),
+        'Roboto'        : require('./app/assets/fonts/Roboto/Roboto-Medium.ttf'),
+
+        'JetBrainsMono-Bold' : require('./app/assets/fonts/JetBrainsMono-2.304/ttf/JetBrainsMono-Bold.ttf'),
+        'JetBrainsMono-Light' : require('./app/assets/fonts/JetBrainsMono-2.304/ttf/JetBrainsMono-Light.ttf'),
+        'JetBrainsMono-Medium' : require('./app/assets/fonts/JetBrainsMono-2.304/ttf/JetBrainsMono-Medium.ttf'),
+        'JetBrainsMono-Regular' : require('./app/assets/fonts/JetBrainsMono-2.304/ttf/JetBrainsMono-Regular.ttf'),
+        'JetBrainsMono-Thin' : require('./app/assets/fonts/JetBrainsMono-2.304/ttf/JetBrainsMono-Thin.ttf'),
     })
 
     if (!fontsLoaded) return null
@@ -91,16 +96,14 @@ export default function App() {
                     screenOptions={{
                         headerShown: false,
                     }}
-                    initialRouteName='SignIn'
+                    initialRouteName='Login'
                 >
-                    {/* <Stack.Screen name="Test" component={ TestScreen } /> */}
+                    <Stack.Screen name="Test" component={ TestScreen } />
                     <Stack.Screen name="Login" component={ LoginScreen } />
                     <Stack.Screen name="Init" component={ InitScreen } />
                     <Stack.Screen name="Home" component={ HomeScreen } />
                     <Stack.Screen name="Chat" component={ ChatScreen } />
                     <Stack.Screen name="Setting" component={ SettingScreen }/>
-                    <Stack.Screen name="Plugin" component={ PluginScreen } />
-                    <Stack.Screen name="PluginApp" component={ PluginAppScreen } />
                 </Stack.Navigator>
             </NavigationContainer>
         </AppProvider>

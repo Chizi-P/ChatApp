@@ -2,17 +2,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class Manager {
     constructor(socket = null) {
-        this.baseURL = 'http://192.168.0.16:3000/api/v1'
+        this.baseURL = 'http://192.168.0.16:3000/api/v1/'
         this.token
         AsyncStorage.getItem('@user.token', (err, token) => {
             this.token = token
         })
-        this.defaultExpires = 1000 * 60
+        this.defaultExpires = 1000 * 60 * 5
         this.socket = socket
     }
     
     async get(url, param, body = {}) {
-        const response = await fetch(new URL(url, this.baseURL), { 
+        const response = await fetch(new URL(url, this.baseURL).href, { 
             method  : 'GET', 
             headers : new Headers({
                 "Content-Type": "application/json",
@@ -28,7 +28,7 @@ class Manager {
     }
 
     async getData(repo, id = '') {
-        const getResponse = await this.get(`/${repo}/` + id)
+        const getResponse = await this.get(`${repo}/` + id)
         // OPT
         console.log(`get ${repo}\t${id} ok:`, !!getResponse.data)
         if (!getResponse.data) throw new Error(`error ${repo} ${id}`)
@@ -36,7 +36,7 @@ class Manager {
     }
 
     async login(email, password) {
-        const response = await fetch(new URL('/login', this.baseURL), { 
+        const response = await fetch(new URL('login', this.baseURL).href, { 
             method  : 'POST', 
             headers : new Headers({
                 "Content-Type": "application/json"
@@ -44,6 +44,11 @@ class Manager {
             body: JSON.stringify({ email, password })
         })
         const responseText = await response.text()
+        console.log('responseText', responseText)
+        console.log('response.status', response.status)
+        console.log('response', response)
+        if (!response.ok) return false
+
         const user = JSON.parse(responseText)
         if (user.token === undefined) return false
         await AsyncStorage.setItem('@user.token', user.token)
@@ -121,7 +126,7 @@ class Manager {
         // Assume "photo" is the name of the form field the server expects
         formData.append('file', { uri: image, name: filename, type })
 
-        const response = await fetch(new URL('/file', this.baseURL), { 
+        const response = await fetch(new URL('file', this.baseURL).href, { 
             method  : 'POST', 
             headers : new Headers({
                 "Content-Type": "multipart/form-data",
@@ -136,8 +141,8 @@ class Manager {
             url
         }
     }
-    async getImageSourceBlurHash(url) {
-        const response = await fetch(new URL(url + '?blurhash=true', this.baseURL), { 
+    async getImageSourceBlurhash(url) {
+        const response = await fetch(new URL(url + '?blurhash=true', this.baseURL).href, { 
             method  : 'GET', 
             headers : new Headers({
                 "Content-Type": "application/json",
@@ -146,16 +151,15 @@ class Manager {
         })
         const responseText = await response.text()
         return responseText
-
-        // return {
-        //     uri: this.baseURL + url + '?blurhash=true',
-        //     method: 'GET',
-        //     headers : {
-        //         "Content-Type": "application/json",
-        //         "Authorization": `Bearer ${this.token}`
-        //     },
-        // }
     }
+    async loadBlurhash(url) {
+        const savedBlurhash = await AsyncStorage.getItem(`@${url}`)
+        if (savedBlurhash !== null) return savedBlurhash
+        const blurhash = await this.getImageSourceBlurhash(url)
+        AsyncStorage.setItem(`@${url}`, blurhash)
+        return blurhash
+    }
+    
     getImageSource(url) {
         return {
             uri: this.baseURL + url,

@@ -11,40 +11,41 @@ function ARecordView({ messageID }) {
 
     const [message, setMessage] = useState({})
 
+    const [placeholder, setPlaceholder] = useState('')
+    const [source, setSource] = useState('')
+
     useEffect(() => {
         manager.load('message', messageID)
-            .then(setMessage)
+            .then(message => {
+                setMessage(message)
+
+                if (message.type !== 'image') return 
+                manager.loadBlurhash(message.content)
+                    .then(blurhash => {
+                        setPlaceholder(blurhash)
+                        setSource(manager.getImageSource(message.content))
+                    })
+                    .catch(console.warn)
+            })
             .catch(console.warn)
     }, [])
 
     return (
         message.from !== undefined 
             ? message.from === user.id
-                ? <Sent message={message}/>
-                : <Received message={message}/>
+                ? <Sent message={message} placeholder={placeholder} source={source} />
+                : <Received message={message} placeholder={placeholder} source={source} />
             : <></>
     )
 }
 
-function Sent({message}) {
-
-    const { manager } = useAppContext()
-
-    const [placeholder, setPlaceholder] = useState('')
-
-    useEffect(() => {
-        if (message.type !== 'image') return 
-        manager.getImageSourceBlurHash(message.content)
-            .then(setPlaceholder)
-            .catch(console.warn)
-    }, [])
-
+function Sent({message, placeholder, source}) {
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
                 { message.type === 'image'
                     ? <Image 
-                        source={manager.getImageSource(message.content)} 
+                        source={source}
                         style={{ width: 200, height: 200, borderRadius: 10 }}
                         placeholder={placeholder}
                     />
@@ -58,28 +59,14 @@ function Sent({message}) {
     )
 }
 
-<Text style={{textAlign: 'right'}} ></Text>
-
-function Received({message}) {
-
-    const { manager } = useAppContext()
-
-    const [placeholder, setPlaceholder] = useState('')
-
-    useEffect(() => {
-        if (message.type !== 'image') return 
-        manager.getImageSourceBlurHash(message.content)
-            .then(setPlaceholder)
-            .catch(console.warn)
-    }, [])
-
+function Received({message, placeholder, source}) {
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-start', alignSelf: 'flex-start'}}>
                 <VerticalLine style={{backgroundColor: 'royalblue'}}/>
                 { message.type === 'image'
                     ? <Image 
-                        source={manager.getImageSource(message.content)} 
+                        source={source} 
                         style={{ width: 200, height: 200, borderRadius: 10 }}
                         placeholder={placeholder}
                     />

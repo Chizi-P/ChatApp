@@ -1,12 +1,13 @@
 import React from 'react'
-import { SafeAreaView, View, Image } from 'react-native'
+import { View, Image } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import colors from '../config/colors'
 import LayoutView from '../view/LayoutView'
 import MyAppText from '../view/MyAppText'
 
 function ProfileScreen() {
     return (
-        <SafeAreaView style={{ flex: 1}}>
+        <MySafeAreaView>
             <MyAppText style={{alignSelf: 'center', margin: 20, fontSize: 25}}>Tom</MyAppText>
             <View
                 style={{
@@ -34,7 +35,7 @@ function ProfileScreen() {
                 </LayoutView>
 
             </View>
-        </SafeAreaView>
+        </MySafeAreaView>
     )
 }
 

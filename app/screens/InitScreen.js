@@ -3,12 +3,12 @@ import * as SplashScreen from 'expo-splash-screen'
 import {
     View,
     Text,
-    SafeAreaView,
     FlatList,
     Button,
     TouchableOpacity,
     TouchableWithoutFeedback,
 } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import InitConnectSocket from '../func/InitConnectSocket'
@@ -60,9 +60,9 @@ function InitScreen() {
     const loadingProgress = allLoaded.reduce((a, b) => a + (b ? 1 / allLoaded.length : 0), 0) * 100
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <MySafeAreaView>
             <MyAppText>{loadingProgress}</MyAppText>
-        </SafeAreaView>
+        </MySafeAreaView>
     )
 }
 

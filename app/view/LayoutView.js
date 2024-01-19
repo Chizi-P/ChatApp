@@ -35,6 +35,6 @@ function LayoutView({
     )
 }
 
-// child.type.prototype == Animated.prototype ||
+
 
 export default LayoutView

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { SafeAreaView } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import LayoutView from '../view/LayoutView';
 import ItemView from '../view/ItemView'
 import ListView from '../view/ListView'
@@ -13,7 +13,7 @@ function SettingScreen() {
     const navigator = useNavigation()
 
     return (
-        <SafeAreaView>
+        <MySafeAreaView>
             <ListView title='SETTING'>
                 <ItemView text='logout' onPress={() => {
                     manager.logout()
@@ -21,7 +21,7 @@ function SettingScreen() {
                 }}/>
                 <ToggleView title='test'/>
             </ListView>
-        </SafeAreaView>
+        </MySafeAreaView>
     )
 }
 

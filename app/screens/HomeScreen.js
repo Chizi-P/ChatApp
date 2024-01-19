@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    SafeAreaView,
     FlatList,
     Button,
     TouchableOpacity,
     TouchableWithoutFeedback,
 } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ChatListItemView from '../view/ChatListItemView'
@@ -18,6 +18,7 @@ import GridPointBackgroundView from '../view/GridPointBackgroundView'
 import ItemView from '../view/ItemView'
 import ChartView from '../view/chart/ChartView'
 import { schedulePushNotification } from '../func/InitNotifications'
+
 
 function HomeScreen() {
 
@@ -36,7 +37,7 @@ function HomeScreen() {
     }, [])
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <MySafeAreaView>
             <ListView title={user.name + " - CHAT LIST"}>
                 <FlatList
                     data={groups}
@@ -58,7 +59,11 @@ function HomeScreen() {
             <ListView title={'SETTING'}>
                 <ItemView text={'To Setting Screen'} onPress={() => navigation.navigate('Setting')}/>
             </ListView>
-        </SafeAreaView>
+            <ListView title={'Test'}>
+                <ItemView text={'Test Screen'} onPress={() => navigation.navigate('Test')}/>
+            </ListView>
+
+        </MySafeAreaView>
     )
 }
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import { SafeAreaView } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 
 function SignUpScreen() {
     return (
-        <SafeAreaView>
+        <MySafeAreaView>
             
-        </SafeAreaView>
+        </MySafeAreaView>
     )
 }
 

@@ -27,7 +27,7 @@ const defaultTasks = async () => {
 }
 
 const otherTasks = async () =>  {
-    const tasks = JSON.parse(await AsyncStorage.getItem('@tasks'))
+    // const tasks = JSON.parse(await AsyncStorage.getItem('@tasks'))
     // 
     return
 }

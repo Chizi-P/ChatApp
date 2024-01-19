@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { SafeAreaView, TextInput, Button } from 'react-native'
+import { TextInput, Button } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as SplashScreen from 'expo-splash-screen';
 import { useAppContext } from '../../AppContext'
@@ -30,7 +31,7 @@ function LoginScreen({ }) {
 
 
     return (
-        <SafeAreaView>
+        <MySafeAreaView>
             <LayoutView
                 vertical
                 // margin={15}
@@ -62,7 +63,7 @@ function LoginScreen({ }) {
                 }}/>
                 
             </LayoutView>
-        </SafeAreaView>
+        </MySafeAreaView>
     )
 }
 

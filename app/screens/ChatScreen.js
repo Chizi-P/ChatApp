@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import {
     View,
     Text,
-    SafeAreaView,
     FlatList,
     KeyboardAvoidingView,
-    Image
+    Image,
+    TouchableOpacity,
+    Platform
 } from 'react-native'
+import MySafeAreaView from '../view/MySafeAreaView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MyAppText from '../view/MyAppText'
 import LayoutView from '../view/LayoutView'
@@ -17,10 +19,15 @@ import { useAppContext } from '../../AppContext'
 import ListView from '../view/ListView'
 import ARecordView from '../view/chat/ARecordView'
 import ItemView from '../view/ItemView'
+import { BlurView } from 'expo-blur'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { useNavigation } from '@react-navigation/native';
 
 function ChatScreen({ route }) {
 
     const { group: initGroup } = route.params
+    const navigator = useNavigation()
 
     const { manager, currentChannel, setCurrentChannel, updateGroup } = useAppContext()
     
@@ -49,36 +56,54 @@ function ChatScreen({ route }) {
     const flatListRef = React.useRef(null)
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <LayoutView
-                horizontal
-                margin={25}
-                spacing={10}
-                style={{ alignItems: 'center' }}
-            >
-                <Image
-                    style={{
-                        backgroundColor: colors.loading,
-                        width: 30,
-                        height: 30,
-                        borderRadius: 6,
-                    }}
-                />
-                <MyAppText>{group.name}</MyAppText>
-            </LayoutView>
-            <KeyboardAvoidingView
-                behavior="padding"
-                style={{ flex: 1, justifyContent: 'flex-end' }}
-            >
+        <MySafeAreaView>
+            <View style={{ flex: 1 }}>
+                <KeyboardAvoidingView
+                    behavior={Platform.select({ios: 'padding', android: 'height'})}
+                    style={{ flex: 1, justifyContent: 'flex-end' }}
+                    keyboardVerticalOffset={Platform.select({ios: 20, android: 40})}
+                >
+                    <ChatRecordView
+                        messages={group.messages}
+                        style={{ marginHorizontal: 25, flex: 1 }}
+                    />
+                    <TextInputBarView groupID={groupID}/>
+                </KeyboardAvoidingView>
 
-                <ChatRecordView
-                    messages={group.messages}
-                    style={{ marginHorizontal: 25, flex: 1 }}
-                />
+                <BlurView style={{
+                    position: 'absolute',
+                    top: 0,
+                    zIndex: 1,
+                    width: '100%',
+                    borderBottomWidth: 1,
+                    borderColor: 'rgba(255, 255, 255, .5)',
+                }} intensity={60}>
+                    <LayoutView
+                        horizontal
+                        margin={20}
+                        spacing={10}
+                        style={{ alignItems: 'center' }}
+                    >
+                        <TouchableOpacity onPress={navigator.goBack} style={{alignSelf: 'stretch', justifyContent: 'center'}}>
+                            <FontAwesomeIcon icon={faArrowLeft} color='white' />
+                        </TouchableOpacity>
 
-                <TextInputBarView groupID={groupID}/>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                        <Image
+                            style={{
+                                backgroundColor: colors.loading,
+                                width: 30,
+                                height: 30,
+                                borderRadius: 6,
+                            }}
+                        />
+
+                        <MyAppText>{group.name}</MyAppText>
+
+                    </LayoutView>
+                </BlurView>
+
+            </View>
+        </MySafeAreaView>
     )
 }
 
