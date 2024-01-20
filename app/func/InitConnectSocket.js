@@ -29,7 +29,7 @@ export default InitConnectSocket = async (manager, setUpdateGroup, setCurrentCha
 
             group.messages.splice(0, 0, message.id)
             await AsyncStorage.multiSet([
-                [`@group:${message.to}`, JSON.stringify(group)],
+                [`@group:${message.to}`  , JSON.stringify(group)],
                 [`@message:${message.id}`, JSON.stringify(message)]
             ]).catch(console.warn)
             setUpdateGroup(val => !val)

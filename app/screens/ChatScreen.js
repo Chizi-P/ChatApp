@@ -57,52 +57,40 @@ function ChatScreen({ route }) {
 
     return (
         <MySafeAreaView>
-            <View style={{ flex: 1 }}>
-                <KeyboardAvoidingView
-                    behavior={Platform.select({ios: 'padding', android: 'height'})}
-                    style={{ flex: 1, justifyContent: 'flex-end' }}
-                    keyboardVerticalOffset={Platform.select({ios: 20, android: 40})}
-                >
-                    <ChatRecordView
-                        messages={group.messages}
-                        style={{ marginHorizontal: 25, flex: 1 }}
-                    />
-                    <TextInputBarView groupID={groupID}/>
-                </KeyboardAvoidingView>
+            <LayoutView
+                horizontal
+                margin={20}
+                spacing={10}
+                style={{ alignItems: 'center' }}
+            >
+                <TouchableOpacity onPress={navigator.goBack} style={{alignSelf: 'stretch', justifyContent: 'center'}}>
+                    <FontAwesomeIcon icon={faArrowLeft} color='white' />
+                </TouchableOpacity>
 
-                <BlurView style={{
-                    position: 'absolute',
-                    top: 0,
-                    zIndex: 1,
-                    width: '100%',
-                    borderBottomWidth: 1,
-                    borderColor: 'rgba(255, 255, 255, .5)',
-                }} intensity={60}>
-                    <LayoutView
-                        horizontal
-                        margin={20}
-                        spacing={10}
-                        style={{ alignItems: 'center' }}
-                    >
-                        <TouchableOpacity onPress={navigator.goBack} style={{alignSelf: 'stretch', justifyContent: 'center'}}>
-                            <FontAwesomeIcon icon={faArrowLeft} color='white' />
-                        </TouchableOpacity>
+                <Image
+                    style={{
+                        backgroundColor: colors.loading,
+                        width: 30,
+                        height: 30,
+                        borderRadius: 6,
+                    }}
+                />
 
-                        <Image
-                            style={{
-                                backgroundColor: colors.loading,
-                                width: 30,
-                                height: 30,
-                                borderRadius: 6,
-                            }}
-                        />
+                <MyAppText>{group.name}</MyAppText>
 
-                        <MyAppText>{group.name}</MyAppText>
+            </LayoutView>
 
-                    </LayoutView>
-                </BlurView>
+            <KeyboardAvoidingView
+                behavior={Platform.select({ios: 'padding', android: 'height'})}
+                style={{ flex: 1, justifyContent: 'flex-end' }}
+            >
+                <ChatRecordView
+                    messages={group.messages}
+                    style={{ marginHorizontal: 25, flex: 1 }}
+                />
+                <TextInputBarView groupID={groupID}/>
+            </KeyboardAvoidingView>
 
-            </View>
         </MySafeAreaView>
     )
 }

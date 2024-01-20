@@ -15,18 +15,14 @@ function LoginScreen({ }) {
 
     const { manager, user } = useAppContext()
 
-    const [email, onChangeEmail] = React.useState('')
-    const [password, onChangePassword] = React.useState('')
+    const [email   , setEmail   ] = React.useState('')
+    const [password, setPassword] = React.useState('')
 
     useEffect(() => {
-        AsyncStorage.getItem('@user.token', (err, token) => {
-            if (err) console.warn(err)
-            if (token) {
-                navigation.navigate('Init')
-                return
-            }
+        AsyncStorage.getItem('@user.token').then(token => {
+            if (token !== null) navigation.navigate('Init')
             SplashScreen.hideAsync()
-        })
+        }).catch(console.warn)
     }, [])
 
 
@@ -45,21 +41,23 @@ function LoginScreen({ }) {
                 <ListView title='Email' initExpand={false} disable />
                 <TextInput
                     style={{margin: 30, paddingBottom: 10, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1}}
-                    onChangeText={onChangeEmail}
+                    onChangeText={setEmail}
                     value={email}
                 />
                 <ListView title='Password' initExpand={false} disable />
                 <TextInput
                     style={{margin: 30, paddingBottom: 10, color: 'white', borderBottomColor: 'white', borderBottomWidth: 1}}
-                    onChangeText={onChangePassword}
+                    onChangeText={setPassword}
                     value={password}
                 />
                 <Button title='Submit' onPress={async () => {
                     if (await manager.login(email, password)) {
                         console.log('登錄成功')
                         navigation.navigate('Init')
+                        return 
                     }
                     console.log('登錄失敗')
+                    setPassword('')
                 }}/>
                 
             </LayoutView>

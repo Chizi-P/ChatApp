@@ -10,6 +10,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/cli": "^0.17.1",
+    "@expo/ngrok": "^2.5.0",
     "@expo/webpack-config": "~19.0.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
@@ -45,7 +47,8 @@
     "webpack-dev-server": "~3.11.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@expo/ngrok": "^4.1.0"
   },
   "private": true
 }

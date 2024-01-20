@@ -33,7 +33,7 @@ function ARecordView({ messageID }) {
     return (
         message.from !== undefined 
             ? message.from === user.id
-                ? <Sent message={message} placeholder={placeholder} source={source} />
+                ? <Sent     message={message} placeholder={placeholder} source={source} />
                 : <Received message={message} placeholder={placeholder} source={source} />
             : <></>
     )

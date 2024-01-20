@@ -20,12 +20,12 @@ function InitScreen() {
 
     SplashScreen.hideAsync()
 
-    const { manager, setSocket, setCurrentChannel, setUpdateGroup, user, setUser } = useAppContext()
+    const { manager, setSocket, setCurrentChannel, setUpdateGroup, setUser } = useAppContext()
     const navigation = useNavigation()
-    const [loadedSocket, setLoadedSocket] = useState(false)
-    const [loadedUserData, setLoadedUserData] = useState(false)
-    const [loadedFriendsData, setLoadedFriendsData] = useState(false)
-    const [loadedGroupsData, setLoadedGroupsData] = useState(false) 
+    const [loadedSocket      , setLoadedSocket     ] = useState(false)
+    const [loadedUserData    , setLoadedUserData   ] = useState(false)
+    const [loadedFriendsData , setLoadedFriendsData] = useState(false)
+    const [loadedGroupsData  , setLoadedGroupsData ] = useState(false) 
     const allLoaded = [loadedSocket, loadedUserData, loadedFriendsData, loadedGroupsData]
 
     // socket 連線

@@ -2,13 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class Manager {
     constructor(socket = null) {
+        this.socket = socket
         this.baseURL = 'http://192.168.0.16:3000/api/v1/'
         this.token
         AsyncStorage.getItem('@user.token', (err, token) => {
             this.token = token
         })
         this.defaultExpires = 1000 * 60 * 5
-        this.socket = socket
     }
     
     async get(url, param, body = {}) {
@@ -44,19 +44,18 @@ class Manager {
             body: JSON.stringify({ email, password })
         })
         const responseText = await response.text()
-        console.log('responseText', responseText)
-        console.log('response.status', response.status)
-        console.log('response', response)
         if (!response.ok) return false
 
         const user = JSON.parse(responseText)
         if (user.token === undefined) return false
         await AsyncStorage.setItem('@user.token', user.token)
+        this.token = user.token
         return true
     }
     
     async logout() {
-        return await AsyncStorage.removeItem('@user.token')
+        // return await AsyncStorage.removeItem('@user.token')
+        return await AsyncStorage.clear()
     }
     async setExpires(key, expires = this.defaultExpires) {
         return await AsyncStorage.setItem(key + '.expires', (Date.now() + expires).toString())
@@ -123,7 +122,6 @@ class Manager {
         let type = match ? `image/${match[1]}` : `image`
 
         let formData = new FormData()
-        // Assume "photo" is the name of the form field the server expects
         formData.append('file', { uri: image, name: filename, type })
 
         const response = await fetch(new URL('file', this.baseURL).href, { 
