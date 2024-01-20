@@ -22,8 +22,8 @@ class Manager {
         const responseText = await response.text()
         
         return {
-            status : response.status,
-            data   : JSON.parse(responseText)
+            ok   : response.ok,
+            data : JSON.parse(responseText)
         }
     }
 
@@ -135,12 +135,12 @@ class Manager {
         const url = await response.text()
         
         return {
-            status : response.status,
+            ok : response.ok,
             url
         }
     }
-    async getImageSourceBlurhash(url) {
-        const response = await fetch(new URL(url + '?blurhash=true', this.baseURL).href, { 
+    async getImageSourceBlurhash(fileID) {
+        const response = await fetch(new URL('file/' + fileID + '?blurhash=true', this.baseURL).href, { 
             method  : 'GET', 
             headers : new Headers({
                 "Content-Type": "application/json",
@@ -148,24 +148,35 @@ class Manager {
             })
         })
         const responseText = await response.text()
-        return responseText
+        return { 
+            ok: response.ok,
+            blurhash: responseText
+        }
     }
-    async loadBlurhash(url) {
-        const savedBlurhash = await AsyncStorage.getItem(`@${url}`)
+    async loadBlurhash(fileID) {
+        const key = `@${fileID}:blurhash`
+        const savedBlurhash = await AsyncStorage.getItem(key)
         if (savedBlurhash !== null) return savedBlurhash
-        const blurhash = await this.getImageSourceBlurhash(url)
-        AsyncStorage.setItem(`@${url}`, blurhash)
-        return blurhash
+        const res = await this.getImageSourceBlurhash(fileID)
+        if (!res.ok) return ''
+        await AsyncStorage.setItem(key, res.blurhash)
+        return res.blurhash
     }
     
-    getImageSource(url) {
+    getImageSource(fileID) {
         return {
-            uri: this.baseURL + url,
+            uri: new URL('file/' + fileID, this.baseURL).href,
             method: 'GET',
             headers : {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${this.token}`
             }
+        }
+    }
+
+    getVideo(fileID) {
+        return {
+            uri: new URL('file/' + fileID, this.baseURL).href
         }
     }
 }

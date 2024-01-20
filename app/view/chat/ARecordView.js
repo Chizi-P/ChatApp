@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import MyAppText from '../MyAppText';
 import { View, Text } from 'react-native'
 import { Image } from 'expo-image'
+import { Video, ResizeMode } from 'expo-av';
 import LayoutView from '../LayoutView';
 import { useAppContext } from '../../../AppContext';
 
@@ -18,14 +19,16 @@ function ARecordView({ messageID }) {
         manager.load('message', messageID)
             .then(message => {
                 setMessage(message)
-
                 if (message.type !== 'image') return 
-                manager.loadBlurhash(message.content)
-                    .then(blurhash => {
-                        setPlaceholder(blurhash)
-                        setSource(manager.getImageSource(message.content))
-                    })
-                    .catch(console.warn)
+                setSource(manager.getImageSource(message.content))
+
+
+                // manager.loadBlurhash(message.content)
+                //     .then(blurhash => {
+                //         setPlaceholder(blurhash)
+                //         setSource(manager.getImageSource(message.content))
+                //     })
+                //     .catch(console.warn)
             })
             .catch(console.warn)
     }, [])
@@ -40,19 +43,37 @@ function ARecordView({ messageID }) {
 }
 
 function Sent({message, placeholder, source}) {
+
+    const { manager } = useAppContext()
+
+
+    const RenderView = {
+        text: 
+            <MyAppText style={{textAlign: 'right', width: '80%'}}>
+                {message.content}
+            </MyAppText>,
+        image: 
+            <Image 
+                source={source}
+                style={{ width: 200, height: 200, borderRadius: 10 }}
+                placeholder={placeholder}
+            />,
+        video: 
+            <Video
+                // ref={video}
+                style={{ width: 200, height: 200, borderRadius: 10 }}
+                source={manager.getVideo(message.content)}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                isLooping
+            />
+    }
+
+
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
-                { message.type === 'image'
-                    ? <Image 
-                        source={source}
-                        style={{ width: 200, height: 200, borderRadius: 10 }}
-                        placeholder={placeholder}
-                    />
-                    : <MyAppText style={{textAlign: 'right', width: '80%'}}>
-                        {message.content}
-                    </MyAppText>
-                }
+                { RenderView[message.type] }
                 <VerticalLine style={{backgroundColor: 'dodgerblue'}}/>
             </LayoutView>
         </LayoutView>
