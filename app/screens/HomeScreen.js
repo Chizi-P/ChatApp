@@ -59,9 +59,9 @@ function HomeScreen() {
             <ListView title={'SETTING'}>
                 <ItemView text={'To Setting Screen'} onPress={() => navigation.navigate('Setting')}/>
             </ListView>
-            <ListView title={'Test'}>
+            {/* <ListView title={'Test'}>
                 <ItemView text={'Test Screen'} onPress={() => navigation.navigate('Test')}/>
-            </ListView>
+            </ListView> */}
 
         </MySafeAreaView>
     )

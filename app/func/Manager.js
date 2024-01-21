@@ -176,7 +176,11 @@ class Manager {
 
     getVideo(fileID) {
         return {
-            uri: new URL('file/' + fileID, this.baseURL).href
+            uri: new URL('file/' + fileID, this.baseURL).href,
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${this.token}`
+            }
         }
     }
 }

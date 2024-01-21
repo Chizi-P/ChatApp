@@ -20,15 +20,13 @@ function ARecordView({ messageID }) {
             .then(message => {
                 setMessage(message)
                 if (message.type !== 'image') return 
-                setSource(manager.getImageSource(message.content))
-
-
-                // manager.loadBlurhash(message.content)
-                //     .then(blurhash => {
-                //         setPlaceholder(blurhash)
-                //         setSource(manager.getImageSource(message.content))
-                //     })
-                //     .catch(console.warn)
+                // setSource(manager.getImageSource(message.content))
+                manager.loadBlurhash(message.content)
+                    .then(blurhash => {
+                        setPlaceholder(blurhash)
+                        setSource(manager.getImageSource(message.content))
+                    })
+                    .catch(console.warn)
             })
             .catch(console.warn)
     }, [])
@@ -46,6 +44,13 @@ function Sent({message, placeholder, source}) {
 
     const { manager } = useAppContext()
 
+    const video = React.useRef(null)
+    const [status, setStatus] = React.useState({})
+
+    useEffect(() => {
+        if (message.type !== 'video') return
+        // video.current.loadAsync({...manager.getVideo(message.content), shouldPlay: false})
+    }, [])
 
     const RenderView = {
         text: 
@@ -58,20 +63,22 @@ function Sent({message, placeholder, source}) {
                 style={{ width: 200, height: 200, borderRadius: 10 }}
                 placeholder={placeholder}
             />,
-        video: 
+        video: (
             <Video
-                // ref={video}
+                ref={video}
                 style={{ width: 200, height: 200, borderRadius: 10 }}
                 source={manager.getVideo(message.content)}
                 useNativeControls
                 resizeMode={ResizeMode.CONTAIN}
                 isLooping
+                onPlaybackStatusUpdate={status => setStatus(() => status)}
             />
+        )
     }
 
 
     return (
-        <LayoutView vertical style={{paddingVertical: 5}}>
+        <LayoutView vertical style={{ paddingVertical: 5 }}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
                 { RenderView[message.type] }
                 <VerticalLine style={{backgroundColor: 'dodgerblue'}}/>
@@ -81,20 +88,41 @@ function Sent({message, placeholder, source}) {
 }
 
 function Received({message, placeholder, source}) {
+
+    const { manager } = useAppContext()
+
+    const video = React.useRef(null)
+    const [status, setStatus] = React.useState({})
+
+    const RenderView = {
+        text: 
+            <MyAppText style={{textAlign: 'left', width: '80%'}}>
+                {message.content}
+            </MyAppText>,
+        image: 
+            <Image 
+                source={source}
+                style={{ width: 200, height: 200, borderRadius: 10 }}
+                placeholder={placeholder}
+            />,
+        video: (
+            <Video
+                ref={video}
+                style={{ width: 200, height: 200, borderRadius: 10 }}
+                source={manager.getVideo(message.content)}
+                useNativeControls
+                resizeMode={ResizeMode.CONTAIN}
+                isLooping
+                onPlaybackStatusUpdate={status => setStatus(() => status)}
+            />
+        )
+    }
+
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-start', alignSelf: 'flex-start'}}>
                 <VerticalLine style={{backgroundColor: 'royalblue'}}/>
-                { message.type === 'image'
-                    ? <Image 
-                        source={source} 
-                        style={{ width: 200, height: 200, borderRadius: 10 }}
-                        placeholder={placeholder}
-                    />
-                    : <MyAppText style={{textAlign: 'left', width: '80%'}}>
-                        {message.content}
-                    </MyAppText>
-                }
+                { RenderView[message.type] }
             </LayoutView>
         </LayoutView>
     )

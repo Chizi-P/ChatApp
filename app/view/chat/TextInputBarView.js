@@ -10,8 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faImage, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import * as ImagePicker from 'expo-image-picker'
 
-function TextInputBarView({ groupID, style }) {
-    const [text, setText] = useState('')
+function TextInputBarView({ text, onChangeText, groupID, style }) {
+    // const [text, setText] = useState('')
     const [image, setImage] = useState(null)
     const [type, setType] = useState('text')
     const { manager } = useAppContext()
@@ -24,12 +24,13 @@ function TextInputBarView({ groupID, style }) {
             aspect: [4, 3],
             quality: 1,
         })
-
         if (result.canceled) return
+
+        console.log('result.assets:', result.assets[0])
     
         setImage(result.assets[0].uri)
         const res = await manager.uploadImage(result.assets[0].uri)
-        await manager.sendMessage(groupID, 'image', res.url)
+        await manager.sendMessage(groupID, result.assets[0].type, res.url)
         console.log('res', res.url)
     }
 
@@ -51,12 +52,12 @@ function TextInputBarView({ groupID, style }) {
                 <FontAwesomeIcon icon={faImage} color='white'/>
             </TouchableOpacity>
 
-            <TextInputView text={text} setText={setText} />
+            <TextInputView text={text} setText={onChangeText} />
             <SendButtonView
                 onSend={() => {
                     if (text === '') return
                     manager.sendMessage(groupID, type, text)
-                        .then(() => setText(''))
+                        .then(() => onChangeText(''))
                         .catch(console.warn)
                 }}
             />

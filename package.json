@@ -45,7 +45,8 @@
     "react-native-web": "~0.19.6",
     "socket.io-client": "^4.5.2",
     "webpack-dev-server": "~3.11.0",
-    "expo-av": "~13.10.3"
+    "expo-av": "~13.10.3",
+    "expo-video-thumbnails": "~7.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

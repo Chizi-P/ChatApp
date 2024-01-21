@@ -30,10 +30,15 @@ function ChatScreen({ route }) {
     const navigator = useNavigation()
 
     const { manager, currentChannel, setCurrentChannel, updateGroup } = useAppContext()
+
+    const [text, setText] = useState('')
     
     const [group, setGroup] = useState(initGroup)
     // FIXME
-    const [sendingMessages, setSendingMessages] = useState([])
+    // const [sendingMessages, setSendingMessages] = useState([])
+
+    // const [showTenor, setShowTenor] = useState(true)
+    // const [tenor, setTenor] = useState({})
 
     const groupID = group.id
 
@@ -52,6 +57,19 @@ function ChatScreen({ route }) {
     useEffect(() => {
         manager.load('group', groupID).then(setGroup)
     }, [updateGroup])
+
+    // useEffect(() => {
+    //     if (showTenor) {
+    //         fetch(`https://g.tenor.com/v1/search?q=${'hi'}&key=LIVDSRZULELA&limit=8&media_filter=tinygif`, { method: 'GET' })
+    //         .then(res => {
+    //             res.text().then(str => {
+    //                 const tenor = JSON.parse(str)
+    //                 setTenor(tenor)
+    //             })
+    //         })
+    //         .catch(console.warn)
+    //     }
+    // }, [setShowTenor])
 
     const flatListRef = React.useRef(null)
 
@@ -88,8 +106,26 @@ function ChatScreen({ route }) {
                     messages={group.messages}
                     style={{ marginHorizontal: 25, flex: 1 }}
                 />
-                <TextInputBarView groupID={groupID}/>
+                <TextInputBarView text={text} onChangeText={setText} groupID={groupID}/>
             </KeyboardAvoidingView>
+
+            {/* { showTenor ?
+                <FlatList
+                    data                = { tenor.results }
+                    renderItem          = {({ item }) => (
+                        <Image 
+                            source={{ uri: item.media[0].tinygif.url }} 
+                            style={{
+                                width: item.media[0].tinygif.dims[0],
+                                height: item.media[0].tinygif.dims[1],
+                            }}
+                        />
+                    )}
+                    keyExtractor        = {item => item.id}
+                    scrollEnabled
+                    style={{height: 0}}
+                />
+            : <></> } */}
 
         </MySafeAreaView>
     )
