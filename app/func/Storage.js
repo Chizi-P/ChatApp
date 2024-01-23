@@ -1,8 +1,9 @@
 import Storage from 'react-native-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import api from '../config/api'
 
 async function getData(url, param, body = {}) {
-    const baseURL  = 'http://192.168.0.16:3000/api/v1'
+    const baseURL  = api.baseURL
     const token    = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiIwMUhKUjRRTVAzWlFQSDMxMlQ3QVZNM0I0WiIsIm5hbWUiOiJ1c2VyMiIsImVtYWlsIjoidXNlcjJAZW1haWwuY29tIiwiY3JlYXRlQXQiOjE3MDM5MzczMjYwMzcsImlhdCI6MTcwMzkzNzMyNn0.mUOxr9T0qleClXz4Uhojwgm5fLgpDTE_AgmuyOjAQNk'
     const response = await fetch(new URL(url, baseURL), { 
         method  : 'GET', 

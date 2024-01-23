@@ -2,12 +2,13 @@ import io from 'socket.io-client'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { UpdateReceivedChatRecords } from './UpdateChatRecords'
 import { schedulePushNotification } from './InitNotifications'
+import api from '../config/api'
 
 export default InitConnectSocket = async (manager, setUpdateGroup, setCurrentChannel) => {
 
     const token = await AsyncStorage.getItem('@user.token')
 
-    const socket = io('ws://192.168.0.16:3000/', { 
+    const socket = io(api.socketURL, { 
         extraHeaders: {
             token: token
         }

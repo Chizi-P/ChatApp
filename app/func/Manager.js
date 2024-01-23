@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import api from '../config/api'
 
 class Manager {
     constructor(socket = null) {
         this.socket = socket
-        this.baseURL = 'http://192.168.0.16:3000/api/v1/'
+        this.baseURL = api.baseURL
         this.token
         AsyncStorage.getItem('@user.token', (err, token) => {
             this.token = token
