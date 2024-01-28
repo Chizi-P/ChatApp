@@ -33,7 +33,6 @@ function ProfileScreen() {
                         }}
                     ></Image>
                 </LayoutView>
-
             </View>
         </MySafeAreaView>
     )

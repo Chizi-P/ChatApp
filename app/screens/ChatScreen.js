@@ -12,17 +12,16 @@ import MySafeAreaView from '../view/MySafeAreaView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MyAppText from '../view/MyAppText'
 import LayoutView from '../view/LayoutView'
-import ChatRecordView from '../view/chat/ChatRecordView'
+import Messages from '../view/chat/Messages'
 import TextInputBarView from '../view/chat/TextInputBarView'
 import colors from '../config/colors'
 import { useAppContext } from '../../AppContext'
 import ListView from '../view/ListView'
-import ARecordView from '../view/chat/ARecordView'
 import ItemView from '../view/ItemView'
 import { BlurView } from 'expo-blur'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
 
 function ChatScreen({ route }) {
 
@@ -45,7 +44,7 @@ function ChatScreen({ route }) {
     useEffect(() => {
         setCurrentChannel(groupID)
         console.log('setCurrentChannel', groupID)
-        manager.load('group', groupID).then(setGroup)
+        manager.load('group', groupID).then(setGroup).catch(console.warn)
 
         return () => {
             console.log('currentChannel', currentChannel)
@@ -55,7 +54,7 @@ function ChatScreen({ route }) {
     }, [])
 
     useEffect(() => {
-        manager.load('group', groupID).then(setGroup)
+        manager.load('group', groupID).then(setGroup).catch(console.warn)
     }, [updateGroup])
 
     // useEffect(() => {
@@ -77,20 +76,20 @@ function ChatScreen({ route }) {
         <MySafeAreaView>
             <LayoutView
                 horizontal
-                margin={20}
-                spacing={10}
-                style={{ alignItems: 'center' }}
+                margin  = {20}
+                spacing = {10}
+                style   = {{ alignItems: 'center' }}
             >
-                <TouchableOpacity onPress={navigator.goBack} style={{alignSelf: 'stretch', justifyContent: 'center'}}>
+                <TouchableOpacity onPress={navigator.goBack} style={{ alignSelf: 'stretch', justifyContent: 'center' }}>
                     <FontAwesomeIcon icon={faArrowLeft} color='white' />
                 </TouchableOpacity>
 
                 <Image
                     style={{
-                        backgroundColor: colors.loading,
-                        width: 30,
-                        height: 30,
-                        borderRadius: 6,
+                        backgroundColor : colors.loading,
+                        width           : 30,
+                        height          : 30,
+                        borderRadius    : 6,
                     }}
                 />
 
@@ -99,14 +98,18 @@ function ChatScreen({ route }) {
             </LayoutView>
 
             <KeyboardAvoidingView
-                behavior={Platform.select({ios: 'padding', android: 'height'})}
+                behavior={Platform.select({ ios: 'padding', android: 'height' })}
                 style={{ flex: 1, justifyContent: 'flex-end' }}
             >
-                <ChatRecordView
+                <Messages
                     messages={group.messages}
-                    style={{ marginHorizontal: 25, flex: 1 }}
+                    style={{ flex: 1, marginHorizontal: 25 }}
                 />
-                <TextInputBarView text={text} onChangeText={setText} groupID={groupID}/>
+                <TextInputBarView 
+                    text         = { text } 
+                    onChangeText = { setText } 
+                    groupID      = { groupID }
+                />
             </KeyboardAvoidingView>
 
             {/* { showTenor ?

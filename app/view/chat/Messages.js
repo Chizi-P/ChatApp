@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, ScrollView, LayoutAnimation, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ARecordView from './ARecordView'
-import MyAppText from '../MyAppText';
-import { BlurView } from 'expo-blur';
+import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, ActivityIndicator, ScrollView, LayoutAnimation, TouchableOpacity } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Message from './Message'
+import MyAppText from '../MyAppText'
+import { BlurView } from 'expo-blur'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons'
 
@@ -14,7 +14,7 @@ function loadMore(messages, setLoadedMessages, offset, setOffset, limit) {
     setOffset(offset + limit)
 }
 
-function ChatRecordView({messages = [], style}) {
+function Messages({messages = [], style}) {
 
     const flatListRef = React.useRef(null)
 
@@ -36,7 +36,7 @@ function ChatRecordView({messages = [], style}) {
             <FlatList
                 ref                 = {flatListRef}
                 data                = {messages}
-                renderItem          = {({ item: messageID }) => <ARecordView messageID={ messageID }/> }
+                renderItem          = {({ item: messageID }) => <Message messageID={ messageID }/> }
                 keyExtractor        = {messageID => messageID.toString()}
                 onContentSizeChange = {() => {
                     // flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
@@ -131,5 +131,4 @@ const BackTopButtonAnimation = () => {
     })
 }
 
-export default ChatRecordView;
-
+export default Messages

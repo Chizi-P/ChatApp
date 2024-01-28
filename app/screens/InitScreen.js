@@ -42,18 +42,19 @@ function InitScreen() {
             
             Promise.all(user.friends.map(async id => await manager.load('user', id)))
                 .then(setLoadedFriendsData(true))
+                .catch(console.warn)
                 
             Promise.all([...user.groups, ...user.directGroups].map(async id => await manager.load('group', id)))
                 .then(setLoadedGroupsData(true))
-        })
+                .catch(console.warn)
+        }).catch(console.warn)
     }, [])
 
     
     
     useEffect(() => {
         if (allLoaded.every(loaded => loaded === true)) {
-            console.log('加載完成，跳轉到 Home')
-            navigation.navigate('Home')
+            navigation.reset({routes: [{ name: 'Home' }]})
         }
     }, allLoaded)
 

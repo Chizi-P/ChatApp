@@ -16,8 +16,8 @@ class Manager {
         const response = await fetch(new URL(url, this.baseURL).href, { 
             method  : 'GET', 
             headers : new Headers({
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.token}`
+                'Content-Type'  : 'application/json',
+                'Authorization' : `Bearer ${this.token}`
             })
         })
         const responseText = await response.text()
@@ -40,7 +40,7 @@ class Manager {
         const response = await fetch(new URL('login', this.baseURL).href, { 
             method  : 'POST', 
             headers : new Headers({
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json'
             }),
             body: JSON.stringify({ email, password })
         })
@@ -128,8 +128,8 @@ class Manager {
         const response = await fetch(new URL('file', this.baseURL).href, { 
             method  : 'POST', 
             headers : new Headers({
-                "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${this.token}`
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${this.token}`
             }),
             body: formData,
         })
@@ -144,8 +144,8 @@ class Manager {
         const response = await fetch(new URL('file/' + fileID + '?blurhash=true', this.baseURL).href, { 
             method  : 'GET', 
             headers : new Headers({
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`
             })
         })
         const responseText = await response.text()
@@ -169,8 +169,8 @@ class Manager {
             uri: new URL('file/' + fileID, this.baseURL).href,
             method: 'GET',
             headers : {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`
             }
         }
     }
@@ -179,8 +179,8 @@ class Manager {
         return {
             uri: new URL('file/' + fileID, this.baseURL).href,
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${this.token}`
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.token}`
             }
         }
     }

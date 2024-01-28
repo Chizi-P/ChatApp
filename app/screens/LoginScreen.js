@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { TextInput, Button } from 'react-native'
 import MySafeAreaView from '../view/MySafeAreaView'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from 'expo-splash-screen'
 import { useAppContext } from '../../AppContext'
 import { useNavigation } from '@react-navigation/native'
 import MyAppText from '../view/MyAppText'
@@ -13,7 +13,7 @@ function LoginScreen({ }) {
 
     const navigation = useNavigation()
 
-    const { manager, user } = useAppContext()
+    const { manager } = useAppContext()
 
     const [email   , setEmail   ] = React.useState('')
     const [password, setPassword] = React.useState('')
@@ -53,7 +53,7 @@ function LoginScreen({ }) {
                 <Button title='Submit' onPress={async () => {
                     if (await manager.login(email, password)) {
                         console.log('登錄成功')
-                        navigation.navigate('Init')
+                        navigation.reset({routes: [{ name: 'Init' }]})
                         return 
                     }
                     console.log('登錄失敗')

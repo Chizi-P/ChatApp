@@ -8,7 +8,7 @@ import {
     TouchableWithoutFeedback,
 } from 'react-native'
 import MySafeAreaView from '../view/MySafeAreaView'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, CommonActions  } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ChatListItemView from '../view/ChatListItemView'
 import MyAppText from '../view/MyAppText'
@@ -40,20 +40,18 @@ function HomeScreen() {
         <MySafeAreaView>
             <ListView title={user.name + " - CHAT LIST"}>
                 <FlatList
-                    data={groups}
-                    renderItem={({ item: group, index }) => (
+                    data         = { groups }
+                    keyExtractor = { group => group.id }
+                    renderItem   = {({ item: group }) => (
                         <ItemView
                             text={group.name}
                             onPress={() => {
                                 console.log(group)
-                                navigation.navigate('Chat', {
-                                    group, 
-                                    // groupID: group.id, name: group.name 
-                                })
+                                navigation.navigate('Chat', { group })
                             }}
                         />
                     )}
-                    keyExtractor={(item, i) => i}
+                    
                 />
             </ListView>
             <ListView title={'SETTING'}>

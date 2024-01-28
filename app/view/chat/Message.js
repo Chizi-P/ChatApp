@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import MyAppText from '../MyAppText';
+import MyAppText from '../MyAppText'
 import { View, Text } from 'react-native'
 import { Image } from 'expo-image'
-import { Video, ResizeMode } from 'expo-av';
-import LayoutView from '../LayoutView';
-import { useAppContext } from '../../../AppContext';
+import { Video, ResizeMode } from 'expo-av'
+import LayoutView from '../LayoutView'
+import { useAppContext } from '../../../AppContext'
 
-function ARecordView({ messageID }) {
+function Message({ messageID }) {
 
     const { manager, user } = useAppContext()
 
@@ -31,27 +31,6 @@ function ARecordView({ messageID }) {
             .catch(console.warn)
     }, [])
 
-    return (
-        message.from !== undefined 
-            ? message.from === user.id
-                ? <Sent     message={message} placeholder={placeholder} source={source} />
-                : <Received message={message} placeholder={placeholder} source={source} />
-            : <></>
-    )
-}
-
-function Sent({message, placeholder, source}) {
-
-    const { manager } = useAppContext()
-
-    const video = React.useRef(null)
-    const [status, setStatus] = React.useState({})
-
-    useEffect(() => {
-        if (message.type !== 'video') return
-        // video.current.loadAsync({...manager.getVideo(message.content), shouldPlay: false})
-    }, [])
-
     const RenderView = {
         text: 
             <MyAppText style={{textAlign: 'right', width: '80%'}}>
@@ -65,64 +44,41 @@ function Sent({message, placeholder, source}) {
             />,
         video: (
             <Video
-                ref={video}
                 style={{ width: 200, height: 200, borderRadius: 10 }}
                 source={manager.getVideo(message.content)}
                 useNativeControls
                 resizeMode={ResizeMode.CONTAIN}
                 isLooping
-                onPlaybackStatusUpdate={status => setStatus(() => status)}
             />
         )
     }
 
+    return (
+        message.from !== undefined 
+            ? message.from === user.id
+                ? <Sent>{ RenderView[message.type] }</Sent>
+                : <Received>{ RenderView[message.type] }</Received>
+            : <></>
+    )
+}
 
+function Sent({ children }) {
     return (
         <LayoutView vertical style={{ paddingVertical: 5 }}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-end', alignSelf: 'flex-end'}}>
-                { RenderView[message.type] }
+                { children }
                 <VerticalLine style={{backgroundColor: 'dodgerblue'}}/>
             </LayoutView>
         </LayoutView>
     )
 }
 
-function Received({message, placeholder, source}) {
-
-    const { manager } = useAppContext()
-
-    const video = React.useRef(null)
-    const [status, setStatus] = React.useState({})
-
-    const RenderView = {
-        text: 
-            <MyAppText style={{textAlign: 'left', width: '80%'}}>
-                {message.content}
-            </MyAppText>,
-        image: 
-            <Image 
-                source={source}
-                style={{ width: 200, height: 200, borderRadius: 10 }}
-                placeholder={placeholder}
-            />,
-        video: (
-            <Video
-                ref={video}
-                style={{ width: 200, height: 200, borderRadius: 10 }}
-                source={manager.getVideo(message.content)}
-                useNativeControls
-                resizeMode={ResizeMode.CONTAIN}
-                isLooping
-                onPlaybackStatusUpdate={status => setStatus(() => status)}
-            />
-        )
-    }
-
+function Received({ children }) {
     return (
         <LayoutView vertical style={{paddingVertical: 5}}>
             <LayoutView horizontal spacing={10} style={{justifyContent: 'flex-start', alignSelf: 'flex-start'}}>
                 <VerticalLine style={{backgroundColor: 'royalblue'}}/>
-                { RenderView[message.type] }
+                { children }
             </LayoutView>
         </LayoutView>
     )
@@ -130,9 +86,13 @@ function Received({message, placeholder, source}) {
 
 function VerticalLine({ style }) {
     return (
-        <View style={{width: 5, backgroundColor: 'gray', borderRadius: 4, ...style}}></View>
+        <View style={{
+            width: 5, 
+            backgroundColor: 'gray', 
+            borderRadius: 4, 
+            ...style
+        }}></View>
     )
 }
 
-export default ARecordView;
-
+export default Message
