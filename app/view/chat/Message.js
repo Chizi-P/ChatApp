@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import MyAppText from '../MyAppText'
-import { View, Text } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import { Image } from 'expo-image'
 import { Video, ResizeMode } from 'expo-av'
 import LayoutView from '../LayoutView'
 import { useAppContext } from '../../../AppContext'
 
-function Message({ messageID }) {
+function Message({ messageID, onPress }) {
 
     const { manager, user } = useAppContext()
 
     const [message, setMessage] = useState({})
 
     const [placeholder, setPlaceholder] = useState('')
-    const [source, setSource] = useState('')
+    // const [source, setSource] = useState('')
 
     useEffect(() => {
         manager.load('message', messageID)
@@ -24,40 +24,60 @@ function Message({ messageID }) {
                 manager.loadBlurhash(message.content)
                     .then(blurhash => {
                         setPlaceholder(blurhash)
-                        setSource(manager.getImageSource(message.content))
+                        // setSource(manager.getImageSource(message.content))
                     })
                     .catch(console.warn)
             })
             .catch(console.warn)
     }, [])
 
-    const RenderView = {
-        text: 
-            <MyAppText style={{textAlign: 'right', width: '80%'}}>
-                {message.content}
-            </MyAppText>,
-        image: 
-            <Image 
-                source={source}
-                style={{ width: 200, height: 200, borderRadius: 10 }}
-                placeholder={placeholder}
-            />,
-        video: (
-            <Video
-                style={{ width: 200, height: 200, borderRadius: 10 }}
-                source={manager.getVideo(message.content)}
-                useNativeControls
-                resizeMode={ResizeMode.CONTAIN}
-                isLooping
-            />
-        )
+    let content = <></>
+    switch (message.type) {
+        case 'text':
+            content = 
+                <MyAppText style={{ textAlign: message.from === user.id ? 'right': 'left', width: '80%' }}>
+                    { message.content }
+                </MyAppText>
+            break
+
+        case 'image': 
+            content = 
+                <Pressable onPress={onPress}>
+                    <Image 
+                        source      = { manager.getFileSource(message.content) }
+                        placeholder = { placeholder }
+                        style       = {{ 
+                            width  : 200, 
+                            height : 200, 
+                            borderRadius: 10 
+                        }}
+                    />
+                </Pressable>
+            break
+        case 'video': 
+            content = 
+                <Video
+                    source     = { manager.getFileSource(message.content) }
+                    resizeMode = { ResizeMode.CONTAIN }
+                    style      = {{ 
+                        width  : 200, 
+                        height : 200, 
+                        borderRadius: 10 
+                    }}
+                    useNativeControls
+                    isLooping
+                />
+            break
+        default:
+            content = <MyAppText>[default]</MyAppText>
+            break
     }
 
     return (
         message.from !== undefined 
             ? message.from === user.id
-                ? <Sent>{ RenderView[message.type] }</Sent>
-                : <Received>{ RenderView[message.type] }</Received>
+                ? <Sent>{ content }</Sent>
+                : <Received>{ content }</Received>
             : <></>
     )
 }

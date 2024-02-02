@@ -36,7 +36,7 @@ function Messages({messages = [], style}) {
             <FlatList
                 ref                 = {flatListRef}
                 data                = {messages}
-                renderItem          = {({ item: messageID }) => <Message messageID={ messageID }/> }
+                renderItem          = {({ item: messageID }) => <Message messageID={ messageID } onPress={() => {  }}/> }
                 keyExtractor        = {messageID => messageID.toString()}
                 onContentSizeChange = {() => {
                     // flatListRef.current.scrollToOffset({ animated: true, offset: 0 })
@@ -89,13 +89,13 @@ function Messages({messages = [], style}) {
                 style={{
                     position: 'absolute', 
                     width: 50,
+                    height: 50,
                     bottom: 0, 
                     zIndex: 1,
                     overflow: 'hidden',
                     borderRadius: 20,
                     borderWidth: 1,
                     borderColor: 'rgba(255, 255, 255, .5)',
-                    height: 50,
                     alignSelf: 'center',
                     justifyContent: 'center',
                     margin: 5,
@@ -113,6 +113,8 @@ function Messages({messages = [], style}) {
                     <FontAwesomeIcon icon={faArrowDown} color='white'/>
                 </BlurView>
             </TouchableOpacity> : <></>}
+
+
         </View>
     )
 }

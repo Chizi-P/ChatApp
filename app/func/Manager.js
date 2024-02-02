@@ -164,21 +164,32 @@ class Manager {
         return res.blurhash
     }
     
-    getImageSource(fileID) {
+    // getImageSource(fileID) {
+    //     return {
+    //         uri: new URL('file/' + fileID, this.baseURL).href,
+    //         method: 'GET',
+    //         headers : {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${this.token}`
+    //         }
+    //     }
+    // }
+
+    // getVideo(fileID) {
+    //     return {
+    //         uri: new URL('file/' + fileID, this.baseURL).href,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Authorization': `Bearer ${this.token}`
+    //         }
+    //     }
+    // }
+
+    getFileSource(fileID) {
         return {
             uri: new URL('file/' + fileID, this.baseURL).href,
             method: 'GET',
             headers : {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`
-            }
-        }
-    }
-
-    getVideo(fileID) {
-        return {
-            uri: new URL('file/' + fileID, this.baseURL).href,
-            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.token}`
             }

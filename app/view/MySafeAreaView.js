@@ -5,8 +5,7 @@ function MySafeAreaView({ children, style }) {
     return (
         <SafeAreaView style={{ 
             flex: 1, 
-            paddingTop: 
-            Platform.select({ios: 0, android: StatusBar.currentHeight}), 
+            paddingTop: Platform.select({ios: 0, android: StatusBar.currentHeight}), 
             ...style
         }}>
             { children }

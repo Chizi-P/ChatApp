@@ -33,6 +33,9 @@ function ChatScreen({ route }) {
     const [text, setText] = useState('')
     
     const [group, setGroup] = useState(initGroup)
+
+    const [showImage, setShowImage] = useState(true)
+
     // FIXME
     // const [sendingMessages, setSendingMessages] = useState([])
 
@@ -129,6 +132,35 @@ function ChatScreen({ route }) {
                     style={{height: 0}}
                 />
             : <></> } */}
+
+            {
+                showImage ? 
+                    <View style={{
+                        flex: 1,
+                        position: 'absolute', 
+                        // width: '100%',
+                        // height: '100%',
+                        // backgroundColor: 'red',
+                        // zIndex: 1,
+                        // opacity: 0.5,
+
+                        // alignSelf: 'center',
+                        // justifyContent: 'center',
+                    }} >
+                        <View style={{
+                            flex: 1,
+                            // width: '100%',
+                            // height: '100%',
+                            backgroundColor: 'red',
+                            zIndex: 1,
+                            opacity: 0.5,
+                        }}>
+
+                        </View>
+                        
+                    </View>
+                : <></>
+            }
 
         </MySafeAreaView>
     )
